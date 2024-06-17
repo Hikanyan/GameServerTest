@@ -3,6 +3,10 @@
 ## 環境
 
 - Unity
+  - URP
+- UniTask
+- UniRx
+- VContainer
 - Photon
 - PlayFab
-- Docker for Windows
+
