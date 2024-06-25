@@ -20,8 +20,8 @@ namespace HikanyanLaboratory.Script.LifeTimeScope
                 builder.RegisterInstance(sceneController);
             }
 
+            builder.RegisterComponentInHierarchy<TitleUIManager>();
             builder.Register<TitleController>(Lifetime.Singleton);
-            builder.Register<TitleUIManager>(Lifetime.Singleton);
             builder.Register<TitlePresenter>(Lifetime.Singleton);
         }
     }

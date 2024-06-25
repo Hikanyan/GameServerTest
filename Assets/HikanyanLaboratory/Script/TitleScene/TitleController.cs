@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Cysharp.Threading.Tasks;
+using UnityEditor;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
@@ -10,18 +11,26 @@ namespace HikanyanLaboratory.Script.TitleScene
         {
             _presenter = presenter;
         }
-
-        public void StartGame()
+        
+        public async UniTask Initialize()
         {
+            await _presenter.Initialize();
+            // その他の初期化コード
         }
 
-        void Quit()
+        public void OnStartButtonPressed()
         {
-#if UNITY_EDITOR
-            EditorApplication.isPlaying = false; //ゲームプレイ終了
-#else
-        Application.Quit();//ゲームプレイ終了
-#endif
+            // スタートボタンが押されたときの処理
+        }
+
+        public void OnOptionButtonPressed()
+        {
+            // オプションボタンが押されたときの処理
+        }
+        
+        public void OnExitButtonPressed()
+        {
+            // 終了ボタンが押されたときの処理
         }
     }
 }
