@@ -18,6 +18,7 @@ namespace HikanyanLaboratory.Audio
         [SerializeField] private Button _playBgmButton;
         [SerializeField] private Button _playSeButton;
         [SerializeField] private Button _playMeButton;
+        [SerializeField] private Button _voiceButton;
 
         private CriAudioManager _criAudioManager;
 
@@ -25,15 +26,19 @@ namespace HikanyanLaboratory.Audio
         private VolumeControl _bgmVolumeControl;
         private VolumeControl _seVolumeControl;
         private VolumeControl _meVolumeControl;
+        private VolumeControl _voiceVolumeControl;
+
 
         private CueNameControl _bgmCueNameControl;
         private CueNameControl _seCueNameControl;
         private CueNameControl _meCueNameControl;
+        private CueNameControl _voiceCueNameControl;
 
 
         private float _bgmVolume = 1f;
         private float _seVolume = 1f;
         private float _meVolume = 1f;
+        private float _voiceVolume = 1f;
 
         private void Start()
         {
@@ -47,19 +52,26 @@ namespace HikanyanLaboratory.Audio
                 CreateVolumeControl("SE Volume", _seVolume, OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
             _meVolumeControl =
                 CreateVolumeControl("ME Volume", _meVolume, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
+            _voiceVolumeControl =
+                CreateVolumeControl("Voice Volume", _voiceVolume, OnVoiceVolumeSliderChanged,
+                    OnVoiceVolumeInputChanged);
 
             _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
             _seCueNameControl = CreateCueNameControl("SE Cue Name");
             _meCueNameControl = CreateCueNameControl("ME Cue Name");
+            _voiceCueNameControl = CreateCueNameControl("Voice Cue Name");
 
             _playBgmButton.onClick.AddListener(PlayBgm);
             _playSeButton.onClick.AddListener(PlaySe);
             _playMeButton.onClick.AddListener(PlayMe);
+            _voiceButton.onClick.AddListener(PlayVoice);
         }
 
+        int _count = 0;
         private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
             UnityAction<string> onInputChanged)
         {
+            _count++;
             if (volumeControlPrefab == null)
             {
                 UnityEngine.Debug.LogError("volumeControlPrefab is not assigned.");
@@ -119,6 +131,13 @@ namespace HikanyanLaboratory.Audio
             UpdateMEVolume();
         }
 
+        private void OnVoiceVolumeSliderChanged(float value)
+        {
+            _voiceVolume = value / 100;
+            _voiceVolumeControl.SetValue(value / 100);
+            UpdateVoiceVolume();
+        }
+
         private void OnMasterVolumeInputChanged(string value)
         {
             if (float.TryParse(value, out float floatValue))
@@ -155,6 +174,16 @@ namespace HikanyanLaboratory.Audio
                 _meVolume = floatValue / 100;
                 _meVolumeControl.SetValue(floatValue / 100);
                 UpdateMEVolume();
+            }
+        }
+
+        private void OnVoiceVolumeInputChanged(string value)
+        {
+            if (float.TryParse(value, out float floatValue))
+            {
+                _voiceVolume = floatValue / 100;
+                _voiceVolumeControl.SetValue(floatValue / 100);
+                UpdateVoiceVolume();
             }
         }
 
@@ -200,6 +229,20 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        private void UpdateVoiceVolume()
+        {
+            var players = _criAudioManager.GetPlayers(CriAudioType.Voice);
+            foreach (var player in players)
+            {
+                player.SetVolume(_voiceVolume);
+                // プレイバックを更新する必要がある場合はここで更新
+                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.Voice))
+                {
+                    player.Update(playerData.Playback);
+                }
+            }
+        }
+
         private void PlayBgm()
         {
             string cueName = _bgmCueNameControl.GetCueName();
@@ -224,6 +267,15 @@ namespace HikanyanLaboratory.Audio
             if (!string.IsNullOrEmpty(cueName))
             {
                 _criAudioManager.Play(CriAudioType.ME, cueName);
+            }
+        }
+
+        private void PlayVoice()
+        {
+            string cueName = _voiceCueNameControl.GetCueName();
+            if (!string.IsNullOrEmpty(cueName))
+            {
+                _criAudioManager.Play(CriAudioType.Voice, cueName);
             }
         }
     }
