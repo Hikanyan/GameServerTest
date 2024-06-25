@@ -4,6 +4,9 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory
 {
+    /// <summary>
+    /// CriAudioPresenterは、CriAudioManagerを使って音声を再生するためのクラスです。
+    /// </summary>
     public class CriAudioPresenter : IStartable, IDisposable
     {
         private readonly AudioManager _audioManager;

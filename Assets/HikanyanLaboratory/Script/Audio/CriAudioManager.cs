@@ -11,6 +11,9 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory
 {
+    /// <summary>
+    /// AudioManagerは、CriAudioを管理するためのクラスです。
+    /// </summary>
     public class AudioManager : IDisposable
     {
         private readonly AudioSettings _settings;

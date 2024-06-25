@@ -34,7 +34,6 @@ namespace HikanyanLaboratory.LifeTimeScope
             builder.Register<SeCueSheet>(Lifetime.Singleton).As<ICriAudio>();
             builder.Register<MeCueSheet>(Lifetime.Singleton).As<ICriAudio>();
             builder.Register<AudioManager>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<CriAudioEditor>(Lifetime.Singleton);
             builder.Register<CriAudioPresenter>(Lifetime.Singleton);
         }
     }
