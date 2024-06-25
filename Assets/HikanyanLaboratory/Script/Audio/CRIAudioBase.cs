@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace HikanyanLaboratory
 {
+    
     public abstract class CueSheetBase : ICriAudio
     {
         protected CriAtomExPlayer Player;
@@ -44,6 +45,11 @@ namespace HikanyanLaboratory
         public virtual void Resume()
         {
             Player.Resume(CriAtomEx.ResumeMode.PausedPlayback);
+        }
+
+        public virtual void Set3dListener(CriAtomEx3dListener listener)
+        {
+            Player.Set3dListener(listener);
         }
 
         public virtual void Dispose()

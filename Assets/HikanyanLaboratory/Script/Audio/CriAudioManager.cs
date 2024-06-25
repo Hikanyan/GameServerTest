@@ -19,55 +19,93 @@ namespace HikanyanLaboratory
         public ICriAudio ME { get; }
 
         private float _masterVolume = 1f;
-        public Subject<float> MasterVolumeChanged = new Subject<float>();
+        private readonly Subject<float> _masterVolumeChanged = new Subject<float>();
+        private readonly Dictionary<CueSheet, string> _cueSheetPaths = new Dictionary<CueSheet, string>();
+        private readonly Dictionary<CueSheet, string> _awbPaths = new Dictionary<CueSheet, string>();
 
-        public AudioManager(AudioSettings settings, BgmCueSheet bgmCueSheet, SeCueSheet seCueSheet, MeCueSheet meCueSheet)
+        public AudioManager(AudioSettings settings, BgmCueSheet bgmCueSheet, SeCueSheet seCueSheet,
+            MeCueSheet meCueSheet)
         {
             _settings = settings;
             BGM = bgmCueSheet;
             SE = seCueSheet;
             ME = meCueSheet;
+
+            foreach (var cueSheetPath in _settings._cueSheetPaths)
+            {
+                _cueSheetPaths[cueSheetPath._cueSheet] = cueSheetPath._path;
+            }
+
+            foreach (var awbPath in _settings.AwbPaths)
+            {
+                _awbPaths[awbPath._cueSheet] = awbPath._path;
+            }
         }
 
+        /// <summary>
+        /// 初期化
+        /// </summary>
         public async UniTask Initialize()
         {
-            string path = Application.streamingAssetsPath + $"/{_settings.StreamingAssetsPathAcf}.acf";
+            string path = Application.streamingAssetsPath + $"/{_settings._streamingAssetsPathAcf}.acf";
             CriAtomEx.RegisterAcf(null, path);
 
-            foreach (var sheet in _settings.CueSheetPaths.Keys)
+            foreach (var sheet in _cueSheetPaths.Keys)
             {
-                await AddCueSheet(sheet, _settings.CueSheetPaths[sheet]);
+                await AddCueSheet(sheet, _cueSheetPaths[sheet]);
             }
 
             var listener = UnityEngine.Object.FindObjectOfType<CriAtomListener>();
             if (listener != null)
             {
-                BGM.Player.Set3dListener(listener.nativeListener);
-                SE.Player.Set3dListener(listener.nativeListener);
-                ME.Player.Set3dListener(listener.nativeListener);
+                BGM.Set3dListener(listener.nativeListener);
+                SE.Set3dListener(listener.nativeListener);
+                ME.Set3dListener(listener.nativeListener);
             }
         }
 
+        /// <summary>
+        /// キューシートを追加
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <param name="cueSheetName"></param>
         private async UniTask AddCueSheet(CueSheet sheet, string cueSheetName)
         {
-            CriAtom.AddCueSheet(cueSheetName, $"{cueSheetName}.acb", null, null);
+            string awbPath = _awbPaths.ContainsKey(sheet) && !string.IsNullOrEmpty(_awbPaths[sheet])
+                ? $"{_awbPaths[sheet]}.awb"
+                : null;
+            CriAtom.AddCueSheet(cueSheetName, $"{cueSheetName}.acb", awbPath, null);
             await UniTask.Yield();
         }
 
-        public void SetMasterVolume(float volume)
+        /// <summary>
+        /// マスターボリュームを設定
+        /// </summary>
+        /// <param name="volume"></param>
+        public float MasterVolume
         {
-            _masterVolume = volume;
-            MasterVolumeChanged.OnNext(volume);
-            UpdateAllVolumes();
+            get => _masterVolume;
+            set
+            {
+                _masterVolume = value;
+                _masterVolumeChanged.OnNext(value);
+                UpdateAllVolumes();
+            }
         }
 
+        /// <summary>
+        /// 全てのボリュームを更新
+        /// </summary>
         private void UpdateAllVolumes()
         {
-            BGM.Player.SetVolume(BGM.VolumeLevel * _masterVolume);
-            SE.Player.SetVolume(SE.VolumeLevel * _masterVolume);
-            ME.Player.SetVolume(ME.VolumeLevel * _masterVolume);
+            BGM.Volume(_masterVolume);
+            SE.Volume(_masterVolume);
+            ME.Volume(_masterVolume);
         }
 
+        /// <summary>
+        /// 破棄
+        /// </summary>
         public void Dispose()
         {
             BGM.Dispose();

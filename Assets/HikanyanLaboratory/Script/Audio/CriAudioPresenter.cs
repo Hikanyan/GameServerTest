@@ -4,7 +4,7 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory
 {
-     public class CriAudioPresenter : IStartable, IDisposable
+    public class CriAudioPresenter : IStartable, IDisposable
     {
         private readonly AudioManager _audioManager;
 
@@ -96,6 +96,16 @@ namespace HikanyanLaboratory
                     _audioManager.ME.Volume(volume);
                     break;
             }
+        }
+
+        public void SetMasterVolume(float volume)
+        {
+            _audioManager.MasterVolume = volume;
+        }
+
+        public void GetMasterVolume()
+        {
+            _audioManager.MasterVolume = _audioManager.MasterVolume;
         }
 
         public void Dispose()

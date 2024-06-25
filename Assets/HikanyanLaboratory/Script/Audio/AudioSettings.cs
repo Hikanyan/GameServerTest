@@ -1,15 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HikanyanLaboratory
 {
-    public class AudioSettings
+    [Serializable]
+    public class CueSheetPath
     {
-        public string StreamingAssetsPathAcf { get; set; }
-        public Dictionary<CueSheet, string> CueSheetPaths { get; } = new Dictionary<CueSheet, string>
+        public CueSheet _cueSheet;
+        public string _path;
+    }
+
+    [Serializable]
+    public class AwbPath
+    {
+        public CueSheet _cueSheet;
+        public string _path;
+    }
+
+    [CreateAssetMenu(fileName = "AudioSettings", menuName = "HikanyanLaboratory/AudioSettings")]
+    [System.Serializable]
+    public class AudioSettings : ScriptableObject
+    {
+         public string _streamingAssetsPathAcf = "HikanyanLaboratory";
+
+         public List<CueSheetPath> _cueSheetPaths = new()
         {
-            { CueSheet.BGM, "CueSheet_BGM" },
-            { CueSheet.SE, "CueSheet_SE" },
-            { CueSheet.ME, "CueSheet_ME" }
+            new CueSheetPath { _cueSheet = CueSheet.BGM, _path = "CueSheet_BGM" },
+            new CueSheetPath { _cueSheet = CueSheet.SE, _path = "CueSheet_SE" },
+            new CueSheetPath { _cueSheet = CueSheet.ME, _path = "CueSheet_ME" }
         };
+
+        public List<AwbPath> AwbPaths = new();
     }
 }

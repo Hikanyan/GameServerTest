@@ -1,4 +1,6 @@
-﻿namespace HikanyanLaboratory
+﻿using CriWare;
+
+namespace HikanyanLaboratory
 {
     public interface ICriAudio
     {
@@ -7,5 +9,8 @@
         void Stop();
         void Pause();
         void Resume();
+        void Dispose();
+
+        void Set3dListener(CriAtomEx3dListener listener);
     }
 }
