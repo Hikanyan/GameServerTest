@@ -10,7 +10,7 @@
 - Photon
 - PlayFab
 
-```
+```mermaid
 classDiagram
     class LootLifeTimeScope {
     }
