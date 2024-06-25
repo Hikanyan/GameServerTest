@@ -13,12 +13,12 @@ namespace HikanyanLaboratory.Script.LifeTimeScope
         {
             if (_audioSettings == null)
             {
-                Debug.LogError("AudioSettings is null");
+                UnityEngine.Debug.LogError("AudioSettings is null");
             }
 
             builder.RegisterInstance(_audioSettings);
             var cueSheetDictionary = new Dictionary<CueSheet, string>();
-            foreach (var cueSheetPath in _audioSettings._cueSheetPaths)
+            foreach (var cueSheetPath in _audioSettings.cueSheetPaths)
             {
                 cueSheetDictionary[cueSheetPath._cueSheet] = cueSheetPath._path;
             }

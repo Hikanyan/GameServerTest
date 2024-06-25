@@ -20,12 +20,12 @@ namespace HikanyanLaboratory
     }
 
     [CreateAssetMenu(fileName = "AudioSettings", menuName = "HikanyanLaboratory/AudioSettings")]
-    [System.Serializable]
+    [Serializable]
     public class AudioSettings : ScriptableObject
     {
-         public string _streamingAssetsPathAcf = "HikanyanLaboratory";
+        [FormerlySerializedAs("_streamingAssetsPathAcf")] public string streamingAssetsPathAcf = "HikanyanLaboratory";
 
-         public List<CueSheetPath> _cueSheetPaths = new()
+        [FormerlySerializedAs("_cueSheetPaths")] public List<CueSheetPath> cueSheetPaths = new()
         {
             new CueSheetPath { _cueSheet = CueSheet.BGM, _path = "CueSheet_BGM" },
             new CueSheetPath { _cueSheet = CueSheet.SE, _path = "CueSheet_SE" },

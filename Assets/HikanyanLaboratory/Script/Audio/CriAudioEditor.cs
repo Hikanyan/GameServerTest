@@ -28,9 +28,10 @@ namespace HikanyanLaboratory
         {
             if (_audioPresenter == null)
             {
-                Debug.LogError("CriAudioPresenter is not assigned.");
+                UnityEngine.Debug.LogError("CriAudioPresenter is not assigned.");
                 return;
             }
+
             _audioPresenter.Start();
             _previousVolume = _volume;
         }

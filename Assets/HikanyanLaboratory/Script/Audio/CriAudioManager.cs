@@ -31,7 +31,7 @@ namespace HikanyanLaboratory
             SE = seCueSheet;
             ME = meCueSheet;
 
-            foreach (var cueSheetPath in _settings._cueSheetPaths)
+            foreach (var cueSheetPath in _settings.cueSheetPaths)
             {
                 _cueSheetPaths[cueSheetPath._cueSheet] = cueSheetPath._path;
             }
@@ -47,7 +47,7 @@ namespace HikanyanLaboratory
         /// </summary>
         public async UniTask Initialize()
         {
-            string path = Application.streamingAssetsPath + $"/{_settings._streamingAssetsPathAcf}.acf";
+            string path = Application.streamingAssetsPath + $"/{_settings.streamingAssetsPathAcf}.acf";
             CriAtomEx.RegisterAcf(null, path);
 
             foreach (var sheet in _cueSheetPaths.Keys)
