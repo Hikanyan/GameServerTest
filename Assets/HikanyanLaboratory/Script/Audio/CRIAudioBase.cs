@@ -7,17 +7,11 @@ using Cysharp.Threading.Tasks;
 
 namespace HikanyanLaboratory
 {
-    
     public abstract class CueSheetBase : ICriAudio
     {
-        protected CriAtomExPlayer Player;
+        protected readonly CriAtomExPlayer Player = new();
         protected float VolumeLevel = 1f;
-        public Subject<float> VolumeChanged = new Subject<float>();
-
-        protected CueSheetBase()
-        {
-            Player = new CriAtomExPlayer();
-        }
+        public readonly Subject<float> VolumeChanged = new Subject<float>();
 
         public virtual void Volume(float volume)
         {
@@ -45,6 +39,11 @@ namespace HikanyanLaboratory
         public virtual void Resume()
         {
             Player.Resume(CriAtomEx.ResumeMode.PausedPlayback);
+        }
+
+        public virtual void Loop(bool loop)
+        {
+            Player.Loop(loop);
         }
 
         public virtual void Set3dListener(CriAtomEx3dListener listener)

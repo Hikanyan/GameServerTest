@@ -12,3 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee87068513644ad092b446f3ef58bf3b, type: 3}
   m_Name: AudioSettings
   m_EditorClassIdentifier: 
+  _streamingAssetsPathAcf: Chronicle Dimention
+  _cueSheetPaths:
+  - _cueSheet: 0
+    _path: CueSheet_BGM
+  - _cueSheet: 1
+    _path: CueSheet_SE
+  - _cueSheet: 1
+    _path: CueSheet_SE
+  - _cueSheet: 3
+    _path: CueSheet_Voice
+  AwbPaths: []

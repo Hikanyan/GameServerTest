@@ -4,6 +4,7 @@
     {
         BGM,
         SE,
-        ME
+        ME,
+        Voice
     }
 }

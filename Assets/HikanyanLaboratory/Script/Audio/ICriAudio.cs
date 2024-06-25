@@ -9,6 +9,7 @@ namespace HikanyanLaboratory
         void Stop();
         void Pause();
         void Resume();
+        void Loop(bool loop);
         void Dispose();
 
         void Set3dListener(CriAtomEx3dListener listener);

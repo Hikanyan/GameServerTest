@@ -82,6 +82,22 @@ namespace HikanyanLaboratory
             }
         }
 
+        public void Loop(CueSheet sheet, bool loop)
+        {
+            switch (sheet)
+            {
+                case CueSheet.BGM:
+                    _audioManager.BGM.Loop(loop);
+                    break;
+                case CueSheet.SE:
+                    _audioManager.SE.Loop(loop);
+                    break;
+                case CueSheet.ME:
+                    _audioManager.ME.Loop(loop);
+                    break;
+            }
+        }
+
         public void SetVolume(CueSheet sheet, float volume)
         {
             switch (sheet)
