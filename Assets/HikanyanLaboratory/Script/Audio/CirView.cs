@@ -60,8 +60,26 @@ namespace HikanyanLaboratory.Audio
         private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
             UnityAction<string> onInputChanged)
         {
+            if (volumeControlPrefab == null)
+            {
+                UnityEngine.Debug.LogError("volumeControlPrefab is not assigned.");
+                return null;
+            }
+
             var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
+            if (volumeControlObject == null)
+            {
+                UnityEngine.Debug.LogError("Failed to instantiate volumeControlPrefab.");
+                return null;
+            }
+
             var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
+            if (volumeControl == null)
+            {
+                UnityEngine.Debug.LogError("VolumeControl component not found on the instantiated prefab.");
+                return null;
+            }
+
             volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
             return volumeControl;
         }
