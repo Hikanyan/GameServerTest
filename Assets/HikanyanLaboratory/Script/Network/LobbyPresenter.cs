@@ -1,10 +1,28 @@
-﻿namespace HikanyanLaboratory.Script.Network
+﻿using Cysharp.Threading.Tasks;
+
+namespace HikanyanLaboratory.Network
 {
     public class LobbyPresenter
     {
-        public void Initialize()
+        readonly LobbyView view;
+        readonly LobbyUIManager uiManager;
+
+        public LobbyPresenter(LobbyView view, LobbyUIManager uiManager)
         {
-            // ロビーの初期化処理
+            this.view = view;
+            this.uiManager = uiManager;
+        }
+
+        public async UniTask Initialize()
+        {
+            await view.Initialize();
+            await uiManager.Initialize();
+            // その他の初期化コード
+        }
+
+        public void UpdateLobby(string lobbyName)
+        {
+            view.UpdateLobby(lobbyName);
         }
     }
 }

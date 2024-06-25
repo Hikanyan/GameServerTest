@@ -1,36 +1,30 @@
 ﻿using Cysharp.Threading.Tasks;
+using HikanyanLaboratory.Network;
 using UnityEditor;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
     public class TitleController
     {
-        private readonly TitlePresenter _presenter;
+        readonly TitlePresenter presenter;
+        readonly ServiseLogin serviceLogin;
 
-        public TitleController(TitlePresenter presenter)
+        public TitleController(TitlePresenter presenter, ServiseLogin serviceLogin)
         {
-            _presenter = presenter;
+            this.presenter = presenter;
+            this.serviceLogin = serviceLogin;
         }
-        
+
         public async UniTask Initialize()
         {
-            await _presenter.Initialize();
+            await presenter.Initialize();
+            await serviceLogin.Login();
             // その他の初期化コード
         }
 
         public void OnStartButtonPressed()
         {
             // スタートボタンが押されたときの処理
-        }
-
-        public void OnOptionButtonPressed()
-        {
-            // オプションボタンが押されたときの処理
-        }
-        
-        public void OnExitButtonPressed()
-        {
-            // 終了ボタンが押されたときの処理
         }
     }
 }

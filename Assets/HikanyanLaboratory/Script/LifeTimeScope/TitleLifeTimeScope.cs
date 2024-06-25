@@ -3,7 +3,7 @@ using HikanyanLaboratory.System;
 using VContainer;
 using VContainer.Unity;
 
-namespace HikanyanLaboratory.Script.LifeTimeScope
+namespace HikanyanLaboratory.LifeTimeScope
 {
     public class TitleLifeTimeScope　: LifetimeScope
     {

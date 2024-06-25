@@ -1,8 +1,9 @@
-﻿using PlayFab;
+﻿using Cysharp.Threading.Tasks;
+using PlayFab;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HikanyanLaboratory.Script.Network
+namespace HikanyanLaboratory.Network
 {
     public class ServiseLogin : MonoBehaviour
     {
@@ -18,12 +19,16 @@ namespace HikanyanLaboratory.Script.Network
             _slientLoginButton.onClick.AddListener(() => PlayFabAuthService.Instance.Authenticate(Authtypes.Silent));
             _goggleLoginButton.onClick.AddListener(() => PlayFabAuthService.Instance.Authenticate(Authtypes.Google));
             _gameStartButton.SetActive(false);
+            Login();
+        }
+
+        public async UniTask Login()
+        {
             if (PlayFabClientAPI.IsClientLoggedIn())
             {
                 HideLoginButton();
             }
         }
-        
 
         void HideLoginButton()
         {

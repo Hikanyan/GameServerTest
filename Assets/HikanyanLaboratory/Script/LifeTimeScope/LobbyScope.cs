@@ -1,8 +1,8 @@
-﻿using HikanyanLaboratory.Script.Network;
+﻿using HikanyanLaboratory.Network;
 using VContainer;
 using VContainer.Unity;
 
-namespace HikanyanLaboratory.Script.LifeTimeScope
+namespace HikanyanLaboratory.LifeTimeScope
 {
     public class LobbyScope : LootLifeTimeScope
     {

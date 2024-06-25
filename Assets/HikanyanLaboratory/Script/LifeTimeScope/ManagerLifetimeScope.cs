@@ -4,7 +4,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace HikanyanLaboratory.Script.LifeTimeScope
+namespace HikanyanLaboratory.LifeTimeScope
 {
     public class ManagerLifetimeScope : LifetimeScope
     {
