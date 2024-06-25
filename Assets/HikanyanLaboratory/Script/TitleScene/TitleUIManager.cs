@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
-    public class TitleView : MonoBehaviour
+    public class TitleUIManager : MonoBehaviour
     {
         [SerializeField] private GameObject _backgroundCanvas;
         [SerializeField] private GameObject _titleUICanvas;
