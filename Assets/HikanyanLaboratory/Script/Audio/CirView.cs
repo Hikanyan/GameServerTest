@@ -1,155 +1,212 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HikanyanLaboratory
+namespace HikanyanLaboratory.Audio
 {
     /// <summary>
     /// 各種音声を再生するためのビュー
     /// </summary>
     public class CirView : MonoBehaviour
     {
-        // [SerializeField] private Slider _masterVolumeSlider;
-        // [SerializeField] private Slider _bgmVolumeSlider;
-        // [SerializeField] private Slider _seVolumeSlider;
-        // [SerializeField] private Slider _meVolumeSlider;
-        // [SerializeField] private InputField _masterVolumeInput;
-        // [SerializeField] private InputField _bgmVolumeInput;
-        // [SerializeField] private InputField _seVolumeInput;
-        // [SerializeField] private InputField _meVolumeInput;
-        // [SerializeField] private InputField _bgmCueNameInput;
-        // [SerializeField] private InputField _seCueNameInput;
-        // [SerializeField] private InputField _meCueNameInput;
-        // [SerializeField] private Button _playBgmButton;
-        // [SerializeField] private Button _playSeButton;
-        // [SerializeField] private Button _playMeButton;
-        //
-        // private CriAudioPresenter _criAudioManager;
-        //
-        // private void Start()
-        // {
-        //     // スライダーの範囲を0～100に設定
-        //     _masterVolumeSlider.minValue = 0;
-        //     _masterVolumeSlider.maxValue = 100;
-        //     _bgmVolumeSlider.minValue = 0;
-        //     _bgmVolumeSlider.maxValue = 100;
-        //     _seVolumeSlider.minValue = 0;
-        //     _seVolumeSlider.maxValue = 100;
-        //     _meVolumeSlider.minValue = 0;
-        //     _meVolumeSlider.maxValue = 100;
-        //
-        //     // 初期値設定
-        //     _masterVolumeSlider.value = _criAudioManager.MasterVolume * 100;
-        //     _bgmVolumeSlider.value = _criAudioManager.BGMVolume * 100;
-        //     _seVolumeSlider.value = _criAudioManager.SEVolume * 100;
-        //     _meVolumeSlider.value = _criAudioManager.MEVolume * 100;
-        //
-        //     _masterVolumeInput.text = (_criAudioManager.MasterVolume * 100).ToString(CultureInfo.CurrentCulture);
-        //     _bgmVolumeInput.text = (_criAudioManager.BGMVolume * 100).ToString();
-        //     _seVolumeInput.text = (_criAudioManager.SEVolume * 100).ToString();
-        //     _meVolumeInput.text = (_criAudioManager.MEVolume * 100).ToString();
-        //
-        //     // イベント登録
-        //     _masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
-        //     _bgmVolumeSlider.onValueChanged.AddListener(OnBgmVolumeSliderChanged);
-        //     _seVolumeSlider.onValueChanged.AddListener(OnSeVolumeSliderChanged);
-        //     _meVolumeSlider.onValueChanged.AddListener(OnMeVolumeSliderChanged);
-        //
-        //     _masterVolumeInput.onEndEdit.AddListener(OnMasterVolumeInputChanged);
-        //     _bgmVolumeInput.onEndEdit.AddListener(OnBgmVolumeInputChanged);
-        //     _seVolumeInput.onEndEdit.AddListener(OnSeVolumeInputChanged);
-        //     _meVolumeInput.onEndEdit.AddListener(OnMeVolumeInputChanged);
-        //
-        //     _playBgmButton.onClick.AddListener(PlayBgm);
-        //     _playSeButton.onClick.AddListener(PlaySe);
-        //     _playMeButton.onClick.AddListener(PlayMe);
-        // }
-        //
-        // private void OnMasterVolumeSliderChanged(float value)
-        // {
-        //     _criAudioManager.MasterVolume = value / 100;
-        //     _masterVolumeInput.text = value.ToString();
-        // }
-        //
-        // private void OnBgmVolumeSliderChanged(float value)
-        // {
-        //     _criAudioManager.BGMVolume = value / 100;
-        //     _bgmVolumeInput.text = value.ToString();
-        // }
-        //
-        // private void OnSeVolumeSliderChanged(float value)
-        // {
-        //     _criAudioManager.SEVolume = value / 100;
-        //     _seVolumeInput.text = value.ToString();
-        // }
-        //
-        // private void OnMeVolumeSliderChanged(float value)
-        // {
-        //     _criAudioManager.MEVolume = value / 100;
-        //     _meVolumeInput.text = value.ToString();
-        // }
-        //
-        // private void OnMasterVolumeInputChanged(string value)
-        // {
-        //     if (float.TryParse(value, out float floatValue))
-        //     {
-        //         _criAudioManager.MasterVolume = floatValue / 100;
-        //         _masterVolumeSlider.value = floatValue;
-        //     }
-        // }
-        //
-        // private void OnBgmVolumeInputChanged(string value)
-        // {
-        //     if (float.TryParse(value, out float floatValue))
-        //     {
-        //         _criAudioManager.BGMVolume = floatValue / 100;
-        //         _bgmVolumeSlider.value = floatValue;
-        //     }
-        // }
-        //
-        // private void OnSeVolumeInputChanged(string value)
-        // {
-        //     if (float.TryParse(value, out float floatValue))
-        //     {
-        //         _criAudioManager.SEVolume = floatValue / 100;
-        //         _seVolumeSlider.value = floatValue;
-        //     }
-        // }
-        //
-        // private void OnMeVolumeInputChanged(string value)
-        // {
-        //     if (float.TryParse(value, out float floatValue))
-        //     {
-        //         _criAudioManager.MEVolume = floatValue / 100;
-        //         _meVolumeSlider.value = floatValue;
-        //     }
-        // }
-        //
-        // private void PlayBgm()
-        // {
-        //     string cueName = _bgmCueNameInput.text;
-        //     if (!string.IsNullOrEmpty(cueName))
-        //     {
-        //         _criAudioManager.PlayBGM(cueName);
-        //     }
-        // }
-        //
-        // private void PlaySe()
-        // {
-        //     string cueName = _seCueNameInput.text;
-        //     if (!string.IsNullOrEmpty(cueName))
-        //     {
-        //         _criAudioManager.PlaySE(cueName);
-        //     }
-        // }
-        //
-        // private void PlayMe()
-        // {
-        //     string cueName = _meCueNameInput.text;
-        //     if (!string.IsNullOrEmpty(cueName))
-        //     {
-        //         _criAudioManager.PlayME(cueName);
-        //     }
-        // }
+        [SerializeField] private GameObject volumeControlPrefab;
+        [SerializeField] private GameObject cueNameControlPrefab;
+        [SerializeField] private Transform volumeControlsParent;
+        [SerializeField] private Transform cueNameControlsParent;
+        [SerializeField] private Button _playBgmButton;
+        [SerializeField] private Button _playSeButton;
+        [SerializeField] private Button _playMeButton;
+
+        private CriAudioManager _criAudioManager;
+
+        private VolumeControl _masterVolumeControl;
+        private VolumeControl _bgmVolumeControl;
+        private VolumeControl _seVolumeControl;
+        private VolumeControl _meVolumeControl;
+
+        private CueNameControl _bgmCueNameControl;
+        private CueNameControl _seCueNameControl;
+        private CueNameControl _meCueNameControl;
+
+
+        private float _bgmVolume = 1f;
+        private float _seVolume = 1f;
+        private float _meVolume = 1f;
+
+        private void Start()
+        {
+            _criAudioManager = CriAudioManager.Instance;
+
+            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume,
+                OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
+            _bgmVolumeControl = CreateVolumeControl("BGM Volume", _bgmVolume, OnBgmVolumeSliderChanged,
+                OnBgmVolumeInputChanged);
+            _seVolumeControl =
+                CreateVolumeControl("SE Volume", _seVolume, OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
+            _meVolumeControl =
+                CreateVolumeControl("ME Volume", _meVolume, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
+
+            _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
+            _seCueNameControl = CreateCueNameControl("SE Cue Name");
+            _meCueNameControl = CreateCueNameControl("ME Cue Name");
+
+            _playBgmButton.onClick.AddListener(PlayBgm);
+            _playSeButton.onClick.AddListener(PlaySe);
+            _playMeButton.onClick.AddListener(PlayMe);
+        }
+
+        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
+            UnityAction<string> onInputChanged)
+        {
+            var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
+            var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
+            volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
+            return volumeControl;
+        }
+
+        private CueNameControl CreateCueNameControl(string label)
+        {
+            var cueNameControlObject = Instantiate(cueNameControlPrefab, cueNameControlsParent);
+            var cueNameControl = cueNameControlObject.GetComponent<CueNameControl>();
+            cueNameControl.Initialize(label);
+            return cueNameControl;
+        }
+
+        private void OnMasterVolumeSliderChanged(float value)
+        {
+            _criAudioManager.MasterVolume = value / 100;
+            _masterVolumeControl.SetValue(value / 100);
+        }
+
+        private void OnBgmVolumeSliderChanged(float value)
+        {
+            _bgmVolume = value / 100;
+            _bgmVolumeControl.SetValue(value / 100);
+            UpdateBGMVolume();
+        }
+
+        private void OnSeVolumeSliderChanged(float value)
+        {
+            _seVolume = value / 100;
+            _seVolumeControl.SetValue(value / 100);
+            UpdateSEVolume();
+        }
+
+        private void OnMeVolumeSliderChanged(float value)
+        {
+            _meVolume = value / 100;
+            _meVolumeControl.SetValue(value / 100);
+            UpdateMEVolume();
+        }
+
+        private void OnMasterVolumeInputChanged(string value)
+        {
+            if (float.TryParse(value, out float floatValue))
+            {
+                _criAudioManager.MasterVolume = floatValue / 100;
+                _masterVolumeControl.SetValue(floatValue / 100);
+            }
+        }
+
+        private void OnBgmVolumeInputChanged(string value)
+        {
+            if (float.TryParse(value, out float floatValue))
+            {
+                _bgmVolume = floatValue / 100;
+                _bgmVolumeControl.SetValue(floatValue / 100);
+                UpdateBGMVolume();
+            }
+        }
+
+        private void OnSeVolumeInputChanged(string value)
+        {
+            if (float.TryParse(value, out float floatValue))
+            {
+                _seVolume = floatValue / 100;
+                _seVolumeControl.SetValue(floatValue / 100);
+                UpdateSEVolume();
+            }
+        }
+
+        private void OnMeVolumeInputChanged(string value)
+        {
+            if (float.TryParse(value, out float floatValue))
+            {
+                _meVolume = floatValue / 100;
+                _meVolumeControl.SetValue(floatValue / 100);
+                UpdateMEVolume();
+            }
+        }
+
+        private void UpdateBGMVolume()
+        {
+            var players = _criAudioManager.GetPlayers(CriAudioType.BGM);
+            foreach (var player in players)
+            {
+                player.SetVolume(_bgmVolume);
+                // プレイバックを更新する必要がある場合はここで更新
+                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.BGM))
+                {
+                    player.Update(playerData.Playback);
+                }
+            }
+        }
+
+        private void UpdateSEVolume()
+        {
+            var players = _criAudioManager.GetPlayers(CriAudioType.SE);
+            foreach (var player in players)
+            {
+                player.SetVolume(_seVolume);
+                // プレイバックを更新する必要がある場合はここで更新
+                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.SE))
+                {
+                    player.Update(playerData.Playback);
+                }
+            }
+        }
+
+        private void UpdateMEVolume()
+        {
+            var players = _criAudioManager.GetPlayers(CriAudioType.ME);
+            foreach (var player in players)
+            {
+                player.SetVolume(_meVolume);
+                // プレイバックを更新する必要がある場合はここで更新
+                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.ME))
+                {
+                    player.Update(playerData.Playback);
+                }
+            }
+        }
+
+        private void PlayBgm()
+        {
+            string cueName = _bgmCueNameControl.GetCueName();
+            if (!string.IsNullOrEmpty(cueName))
+            {
+                _criAudioManager.Play(CriAudioType.BGM, cueName);
+            }
+        }
+
+        private void PlaySe()
+        {
+            string cueName = _seCueNameControl.GetCueName();
+            if (!string.IsNullOrEmpty(cueName))
+            {
+                _criAudioManager.Play(CriAudioType.SE, cueName);
+            }
+        }
+
+        private void PlayMe()
+        {
+            string cueName = _meCueNameControl.GetCueName();
+            if (!string.IsNullOrEmpty(cueName))
+            {
+                _criAudioManager.Play(CriAudioType.ME, cueName);
+            }
+        }
     }
 }
