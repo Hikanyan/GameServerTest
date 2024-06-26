@@ -22,7 +22,7 @@ namespace HikanyanLaboratory.Network
             Login();
         }
 
-        public async UniTask Login()
+        public void Login()
         {
             if (PlayFabClientAPI.IsClientLoggedIn())
             {

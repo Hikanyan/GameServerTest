@@ -102,6 +102,7 @@ namespace HikanyanLaboratory.Audio
             if (_listener == null)
             {
                 UnityEngine.Debug.LogWarning($"{nameof(CriAtomListener)} が見つかりません。");
+                _listener = new GameObject(nameof(CriAtomListener)).AddComponent<CriAtomListener>();
             }
             else
             {

@@ -358,6 +358,21 @@ PrefabInstance:
       propertyPath: m_Text
       value: PlayVoiceButton
       objectReference: {fileID: 0}
+    - target: {fileID: 7243963525262795379, guid: a1abefff83ae4db4ba1e215297d6a6e6,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243963525262795379, guid: a1abefff83ae4db4ba1e215297d6a6e6,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9475401
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243963525262795379, guid: a1abefff83ae4db4ba1e215297d6a6e6,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 8668770870346606828, guid: a1abefff83ae4db4ba1e215297d6a6e6,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -580,16 +595,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1301118749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a637ce0b05614e3e9c716e4720646f3f, type: 3}
+  m_Script: {fileID: 11500000, guid: c8d16d9efda749c1865061a16fcd468e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  scopeName: 
-  <Parent>k__BackingField: {fileID: 0}
-  _audioSettings: {fileID: 11400000, guid: 0fab62f36a123854b88ec04ef7375a4a, type: 2}
+  cueSheets: []
 --- !u!4 &1301118751
 Transform:
   m_ObjectHideFlags: 0
