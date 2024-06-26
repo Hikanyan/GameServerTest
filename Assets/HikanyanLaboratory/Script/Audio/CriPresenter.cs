@@ -1,4 +1,5 @@
-﻿using UnityEngine.Events;
+﻿using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -68,20 +69,20 @@ namespace HikanyanLaboratory.Audio
         {
             return audioType switch
             {
-                CriAudioType.BGM => _criAudioManager.BGMVolume,
-                CriAudioType.SE => _criAudioManager.SEVolume,
-                CriAudioType.ME => _criAudioManager.MEVolume,
-                CriAudioType.Master => _criAudioManager.MasterVolume,
-                _ => 1f
+                // CriAudioType.BGM => _criAudioManager.BGMVolume,
+                // CriAudioType.SE => _criAudioManager.SEVolume,
+                // CriAudioType.ME => _criAudioManager.MEVolume,
+                // CriAudioType.Master => _criAudioManager.MasterVolume,
+                // _ => 1f
             };
         }
 
-        private void UpdateVolume(System.Collections.Generic.List<CriAudioManager.CriPlayerData> playerDataList,
+        private void UpdateVolume(List<CriAudioManager.CriPlayerData> playerDataList,
             float volume)
         {
             foreach (var playerData in playerDataList)
             {
-                playerData.Playback.SetVolume(volume);
+                // playerData.Playback.SetVolume(volume);
             }
         }
 
