@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,9 @@ namespace HikanyanLaboratory.Debug
 {
     public class DebugManager
     {
-        private Text _fpsText;
-        private Text _timerText;
-        private Text _logText;
+        private TextMeshProUGUI _fpsText;
+        private TextMeshProUGUI _timerText;
+        private TextMeshProUGUI _logText;
 
         private bool _isShowFPS;
         private int _targetFrameRate;
@@ -23,7 +24,7 @@ namespace HikanyanLaboratory.Debug
         private float _deltaTime;
         private Queue<string> _textLines = new Queue<string>();
 
-        public void SetUIElements(Text fpsText, Text timerText, Text logText)
+        public void SetUIElements(TextMeshProUGUI fpsText, TextMeshProUGUI timerText, TextMeshProUGUI logText)
         {
             _fpsText = fpsText;
             _timerText = timerText;
