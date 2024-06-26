@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace HikanyanLaboratory.Audio
 {
-    public class VolumeControl: MonoBehaviour
+    public class VolumeControl: VolumeBase
     {
         [SerializeField] private TextMeshProUGUI _volumeText;
         [SerializeField] private Slider _volumeSlider;
@@ -15,20 +15,23 @@ namespace HikanyanLaboratory.Audio
 
         public void Initialize(string label, float initialValue, UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
-            _volumeText.text = label;
-            _volumeSlider.minValue = 0;
-            _volumeSlider.maxValue = 100;
-            _volumeSlider.value = initialValue * 100;
-            _volumeInputField.text = (initialValue * 100).ToString(CultureInfo.CurrentCulture);
+            base.Initialize(label, initialValue);
+            labelText.text = label;
 
-            _volumeSlider.onValueChanged.AddListener(onSliderChanged);
-            _volumeInputField.onEndEdit.AddListener(onInputChanged);
+            volumeSlider.minValue = 0;
+            volumeSlider.maxValue = 100;
+            volumeSlider.value = initialValue * 100;
+            volumeSlider.onValueChanged.AddListener(onSliderChanged);
+
+            volumeInputField.text = (initialValue * 100).ToString(CultureInfo.CurrentCulture);
+            volumeInputField.onEndEdit.AddListener(onInputChanged);
         }
 
-        public void SetValue(float value)
+        public new void SetValue(float value)
         {
-            _volumeSlider.value = value * 100;
-            _volumeInputField.text = (value * 100).ToString(CultureInfo.CurrentCulture);
+            base.SetValue(value);
+            volumeSlider.value = value * 100;
+            volumeInputField.text = (value * 100).ToString(CultureInfo.CurrentCulture);
         }
     }
 }

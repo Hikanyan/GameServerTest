@@ -2,6 +2,7 @@
 {
     public enum CriAudioType
     {
+        Master,
         BGM,
         SE,
         ME,

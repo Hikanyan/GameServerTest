@@ -53,9 +53,8 @@ namespace HikanyanLaboratory.Audio
             _meVolumeControl =
                 CreateVolumeControl("ME Volume", _meVolume, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
             _voiceVolumeControl =
-                CreateVolumeControl("Voice Volume", _voiceVolume, OnVoiceVolumeSliderChanged,
-                    OnVoiceVolumeInputChanged);
-
+                CreateVolumeControl("Voice Volume", _voiceVolume, OnVoiceVolumeSliderChanged, OnVoiceVolumeInputChanged);
+            
             _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
             _seCueNameControl = CreateCueNameControl("SE Cue Name");
             _meCueNameControl = CreateCueNameControl("ME Cue Name");
@@ -67,31 +66,16 @@ namespace HikanyanLaboratory.Audio
             _voiceButton.onClick.AddListener(PlayVoice);
         }
 
-        int _count = 0;
         private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
             UnityAction<string> onInputChanged)
         {
-            _count++;
             if (volumeControlPrefab == null)
             {
                 UnityEngine.Debug.LogError("volumeControlPrefab is not assigned.");
                 return null;
             }
-
             var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
-            if (volumeControlObject == null)
-            {
-                UnityEngine.Debug.LogError("Failed to instantiate volumeControlPrefab.");
-                return null;
-            }
-
             var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
-            if (volumeControl == null)
-            {
-                UnityEngine.Debug.LogError("VolumeControl component not found on the instantiated prefab.");
-                return null;
-            }
-
             volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
             return volumeControl;
         }
@@ -130,7 +114,7 @@ namespace HikanyanLaboratory.Audio
             _meVolumeControl.SetValue(value / 100);
             UpdateMEVolume();
         }
-
+        
         private void OnVoiceVolumeSliderChanged(float value)
         {
             _voiceVolume = value / 100;
@@ -176,7 +160,7 @@ namespace HikanyanLaboratory.Audio
                 UpdateMEVolume();
             }
         }
-
+        
         private void OnVoiceVolumeInputChanged(string value)
         {
             if (float.TryParse(value, out float floatValue))
@@ -228,7 +212,7 @@ namespace HikanyanLaboratory.Audio
                 }
             }
         }
-
+        
         private void UpdateVoiceVolume()
         {
             var players = _criAudioManager.GetPlayers(CriAudioType.Voice);
@@ -269,7 +253,7 @@ namespace HikanyanLaboratory.Audio
                 _criAudioManager.Play(CriAudioType.ME, cueName);
             }
         }
-
+        
         private void PlayVoice()
         {
             string cueName = _voiceCueNameControl.GetCueName();
