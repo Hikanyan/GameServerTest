@@ -6,7 +6,7 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory.LifeTimeScope
 {
-    public class TitleLifeTimeScope　: LifetimeScope
+    public class TitleLifeTimeScope : LifetimeScope
     {
         protected override void Configure(IContainerBuilder builder)
         {
@@ -26,6 +26,7 @@ namespace HikanyanLaboratory.LifeTimeScope
             builder.Register<ServiseLogin>(Lifetime.Singleton);
             builder.RegisterComponentInHierarchy<TitleUIManager>();
             builder.RegisterComponentInHierarchy<OptionCanvasMono>();
+            //builder.RegisterEntryPoints();
         }
     }
 }

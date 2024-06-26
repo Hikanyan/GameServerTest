@@ -31,7 +31,7 @@ public class PlayFabController : MonoBehaviour
     private void PlayFabLogin_OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Login Success!");
-        DebugClass.Instance.ShowLog("Login Success!");
+        //DebugClass.Instance.ShowLog("Login Success!");
         loginResultSubject.OnNext("Login Success!");
         loginResultSubject.OnCompleted();
     }
@@ -39,7 +39,7 @@ public class PlayFabController : MonoBehaviour
     private void PlayFabLogin_OnLoginError(PlayFabError error)
     {
         Debug.Log("Login Failed: " + error.ErrorMessage);
-        DebugClass.Instance.ShowLog("Login Failed: " + error.ErrorMessage);
+        //DebugClass.Instance.ShowLog("Login Failed: " + error.ErrorMessage);
         loginResultSubject.OnNext("Login Failed: " + error.ErrorMessage);
         loginResultSubject.OnCompleted();
     }
