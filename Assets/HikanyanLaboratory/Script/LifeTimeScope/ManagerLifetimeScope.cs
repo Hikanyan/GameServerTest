@@ -6,6 +6,12 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory.LifeTimeScope
 {
+    /// <summary>
+    /// Root LifetimeScope for Manager Scene.
+    /// 全体のSceneに反映されるLifetimeScope
+    /// 親コンテナ
+    /// 子のコンテナは見ないようにしないと循環参照になるので注意
+    /// </summary>
     public class ManagerLifetimeScope : LifetimeScope
     {
         [SerializeField] private bool _isDebugMode;

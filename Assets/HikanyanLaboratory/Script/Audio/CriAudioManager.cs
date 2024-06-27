@@ -15,13 +15,12 @@ namespace HikanyanLaboratory.Audio
         private float _masterVolume = 1F;
         private const float Diff = 0.01F; //音量の変更があったかどうかの判定に使う
 
-        public Action<float> MasterVolumeChanged;
-        public Dictionary<CriAudioType, Action<float>> VolumeChanged = new Dictionary<CriAudioType, Action<float>>();
+        private Action<float> _masterVolumeChanged;
+        private readonly Dictionary<CriAudioType, Action<float>> _volumeChanged = new();
 
-        private Dictionary<CriAudioType, CriAtomExPlayer> _players = new Dictionary<CriAudioType, CriAtomExPlayer>();
+        private Dictionary<CriAudioType, CriAtomExPlayer> _players = new();
 
-        private Dictionary<CriAudioType, List<CriPlayerData>> _playerData =
-            new Dictionary<CriAudioType, List<CriPlayerData>>();
+        private Dictionary<CriAudioType, List<CriPlayerData>> _playerData = new();
 
         private CriAtomExPlayer _3dSePlayer;
         private CriAtomEx3dSource _3dSource;
@@ -36,7 +35,7 @@ namespace HikanyanLaboratory.Audio
             set
             {
                 if (!(_masterVolume + Diff < value) && !(_masterVolume - Diff > value)) return;
-                MasterVolumeChanged?.Invoke(value);
+                _masterVolumeChanged?.Invoke(value);
                 _masterVolume = value;
             }
         }
@@ -82,7 +81,7 @@ namespace HikanyanLaboratory.Audio
                     _playerData[cueSheet.Type] = new List<CriPlayerData>();
                 }
 
-                VolumeChanged[cueSheet.Type] = volume =>
+                _volumeChanged[cueSheet.Type] = volume =>
                 {
                     foreach (var data in _playerData[cueSheet.Type])
                     {
@@ -102,6 +101,7 @@ namespace HikanyanLaboratory.Audio
             if (_listener == null)
             {
                 UnityEngine.Debug.LogWarning($"{nameof(CriAtomListener)} が見つかりません。");
+                _listener = new GameObject(nameof(CriAtomListener)).AddComponent<CriAtomListener>();
             }
             else
             {
@@ -113,11 +113,11 @@ namespace HikanyanLaboratory.Audio
                 _3dSePlayer.Set3dListener(_listener.nativeListener);
             }
 
-            MasterVolumeChanged += volume =>
+            _masterVolumeChanged += volume =>
             {
                 foreach (var cueSheet in _cueSheets)
                 {
-                    VolumeChanged[cueSheet.Type]?.Invoke(volume);
+                    _volumeChanged[cueSheet.Type]?.Invoke(volume);
                 }
             };
         }
