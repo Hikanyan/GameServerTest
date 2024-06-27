@@ -1,7 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
+using HikanyanLaboratory.Script.TitleScene;
 using PlayFab;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace HikanyanLaboratory.Network
 {
@@ -13,19 +15,35 @@ namespace HikanyanLaboratory.Network
         [SerializeField, Tooltip("ログインしたらアクティブ化するもの")]
         private GameObject _gameStartButton;
 
+        //TitleController _titleController;
+        //
+        // [Inject]
+        // public void Construct(TitleController titleController)
+        // {
+        //     _titleController = titleController;
+        // }
 
+        private readonly PlayFabController _titleController = new PlayFabController();
+        
         private void Start()
         {
-            _slientLoginButton.onClick.AddListener(() => PlayFabAuthService.Instance.Authenticate(Authtypes.Silent));
-            _goggleLoginButton.onClick.AddListener(() => PlayFabAuthService.Instance.Authenticate(Authtypes.Google));
-            _gameStartButton.SetActive(false);
-            Login();
-        }
+            _slientLoginButton.onClick.AddListener(() =>
+            {
+                UnityEngine.Debug.Log("slientLoginButton");
+                _titleController.SlientLogin();
+            });
 
-        public async UniTask Login()
-        {
+            _goggleLoginButton.onClick.AddListener(() =>
+            {
+                UnityEngine.Debug.Log("goggleLoginButton");
+                _titleController.SlientLogin();
+            });
+            _gameStartButton.SetActive(false);
+
+            // ログイン済みの場合はログインボタンを非表示にする
             if (PlayFabClientAPI.IsClientLoggedIn())
             {
+                UnityEngine.Debug.Log("ログイン済み");
                 HideLoginButton();
             }
         }

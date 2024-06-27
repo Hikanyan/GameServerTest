@@ -133,17 +133,17 @@ namespace HikanyanLaboratory.Debug
             }
         }
 
-        public void ShowErrorLog(string message)
+        public void LogError(string message)
         {
             AddText(message, Color.red);
         }
 
-        public void ShowWarningLog(string message)
+        public void LogWarning(string message)
         {
             AddText(message, Color.yellow);
         }
 
-        public void ShowLog(string message)
+        public void Log(string message)
         {
             AddText(message, Color.green); // または、デフォルトのテキスト色を使いたい場合はこの引数を省略してもよい
         }

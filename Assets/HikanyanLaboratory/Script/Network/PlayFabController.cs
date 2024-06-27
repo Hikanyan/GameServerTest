@@ -5,24 +5,29 @@ using PlayFab.ClientModels;
 using UnityEngine;
 using UniRx;
 
-public class PlayFabController : MonoBehaviour
+public class PlayFabController
 {
     private Subject<string> loginResultSubject = new Subject<string>();
 
     public IObservable<string> OnLoginResult => loginResultSubject;
 
-    void Start()
+    public void SlientLogin()
     {
         PlayFabAuthService.Instance.Authenticate(Authtypes.Silent);
     }
 
-    void OnEnable()
+    public void GoggleLogin()
+    {
+        PlayFabAuthService.Instance.Authenticate(Authtypes.Google);
+    }
+
+    public PlayFabController()
     {
         PlayFabAuthService.OnLoginSuccess += PlayFabLogin_OnLoginSuccess;
         PlayFabAuthService.OnPlayFabError += PlayFabLogin_OnLoginError;
     }
 
-    void OnDisable()
+    ~PlayFabController()
     {
         PlayFabAuthService.OnLoginSuccess -= PlayFabLogin_OnLoginSuccess;
         PlayFabAuthService.OnPlayFabError -= PlayFabLogin_OnLoginError;
@@ -31,7 +36,7 @@ public class PlayFabController : MonoBehaviour
     private void PlayFabLogin_OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Login Success!");
-        DebugClass.Instance.ShowLog("Login Success!");
+        DebugClass.Instance.Log("Login Success!");
         loginResultSubject.OnNext("Login Success!");
         loginResultSubject.OnCompleted();
     }
@@ -39,7 +44,7 @@ public class PlayFabController : MonoBehaviour
     private void PlayFabLogin_OnLoginError(PlayFabError error)
     {
         Debug.Log("Login Failed: " + error.ErrorMessage);
-        DebugClass.Instance.ShowLog("Login Failed: " + error.ErrorMessage);
+        DebugClass.Instance.Log("Login Failed: " + error.ErrorMessage);
         loginResultSubject.OnNext("Login Failed: " + error.ErrorMessage);
         loginResultSubject.OnCompleted();
     }

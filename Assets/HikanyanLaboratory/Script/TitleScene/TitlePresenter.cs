@@ -1,28 +1,28 @@
 ﻿using Cysharp.Threading.Tasks;
 using HikanyanLaboratory.System;
+using VContainer;
+using VContainer.Unity;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
-    public class TitlePresenter
+    public class TitlePresenter : IStartable
     {
         private readonly ManagerSceneController _sceneController;
-        private readonly TitleUIManager _uiManager;
+        private readonly TitleController _titleController;
 
+        [Inject]
         public TitlePresenter(
             ManagerSceneController sceneController,
-            TitleUIManager uiManager
+            TitleController titleController
         )
         {
             _sceneController = sceneController;
-            _uiManager = uiManager;
+            _titleController = titleController;
         }
 
-
-        public async UniTask Initialize()
+        public void Start()
         {
-            _uiManager.Initialize();
-
-            // その他の初期化コード
+            //UnityEngine.Debug.Log("TitlePresenter Start");
         }
 
         public void OnStartButtonPressed()

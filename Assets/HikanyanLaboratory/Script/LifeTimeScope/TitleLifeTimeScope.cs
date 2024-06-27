@@ -6,7 +6,7 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory.LifeTimeScope
 {
-    public class TitleLifeTimeScope　: LifetimeScope
+    public class TitleLifeTimeScope : LifetimeScope
     {
         protected override void Configure(IContainerBuilder builder)
         {
@@ -21,11 +21,24 @@ namespace HikanyanLaboratory.LifeTimeScope
             //     builder.RegisterInstance(sceneController);
             // }
 
-            builder.Register<TitleController>(Lifetime.Singleton);
+
+            // Sceneの依存関係を登録
+            builder.Register<SceneLoader>(Lifetime.Singleton);
+            builder.Register<ManagerSceneController>(Lifetime.Singleton);
+
+            // TitleSceneの依存関係を登録
             builder.Register<TitlePresenter>(Lifetime.Singleton);
-            builder.Register<ServiseLogin>(Lifetime.Singleton);
+            builder.Register<TitleController>(Lifetime.Singleton);
             builder.RegisterComponentInHierarchy<TitleUIManager>();
-            builder.RegisterComponentInHierarchy<OptionCanvasMono>();
+            builder.RegisterComponentInHierarchy<ServiseLogin>();
+
+            // 開始処理
+            builder.RegisterEntryPoint<TitlePresenter>();
+        }
+
+        void Start()
+        {
+            UnityEngine.Debug.Log("TitleLifeTimeScope Start");
         }
     }
 }
