@@ -18,7 +18,7 @@ namespace HikanyanLaboratory.Script.TitleScene
         public async UniTask Initialize()
         {
             await presenter.Initialize();
-            await serviceLogin.Login();
+            serviceLogin.Login();
             // その他の初期化コード
         }
 

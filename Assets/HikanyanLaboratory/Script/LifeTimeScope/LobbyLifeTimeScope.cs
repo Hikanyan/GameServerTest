@@ -4,7 +4,7 @@ using VContainer.Unity;
 
 namespace HikanyanLaboratory.LifeTimeScope
 {
-    public class LobbyScope : LootLifeTimeScope
+    public class LobbyLifeTimeScope : LootLifeTimeScope
     {
         protected override void Configure(IContainerBuilder builder)
         {
