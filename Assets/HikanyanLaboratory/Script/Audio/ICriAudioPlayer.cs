@@ -10,5 +10,6 @@ namespace HikanyanLaboratory.Audio
         void Pause(int index);
         void Resume(int index);
         void SetVolume(float volume);
+        void Dispose();
     }
 }
