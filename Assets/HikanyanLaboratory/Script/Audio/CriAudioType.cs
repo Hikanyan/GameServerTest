@@ -1,11 +1,12 @@
-﻿namespace HikanyanLaboratory.Audio
+namespace HikanyanLaboratory.Audio
 {
     public enum CriAudioType
     {
         Master,
-        BGM,
-        SE,
-        ME,
-        Voice
+        CueSheet_BGM,
+        CueSheet_SE,
+        CueSheet_ME,
+        CueSheet_Voice,
+        Other
     }
 }

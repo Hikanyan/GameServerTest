@@ -51,21 +51,21 @@ namespace HikanyanLaboratory.Audio
 
         public void Pause()
         {
-            _criAudioManager.Pause(_audioType);
+            //_criAudioManager.Pause(_audioType);
         }
 
         public void Resume()
         {
-            _criAudioManager.Resume(_audioType);
+            //_criAudioManager.Resume(_audioType);
         }
 
         public void Stop()
         {
-            _criAudioManager.Stop(_audioType);
+            //_criAudioManager.Stop(_audioType);
         }
         public void Loop(bool isLoop)
         {
-            _criAudioManager.Loop(_audioType, isLoop);
+            //_criAudioManager.Loop(_audioType, isLoop);
         }
     }
 }

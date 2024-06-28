@@ -68,10 +68,10 @@ namespace HikanyanLaboratory.Audio
             _meCueNameControl = CreateCueNameControl("ME Cue Name");
             _voiceCueNameControl = CreateCueNameControl("Voice Cue Name");
 
-            _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.BGM, _bgmCueNameControl);
-            _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.SE, _seCueNameControl);
-            _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.ME, _meCueNameControl);
-            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.Voice, _voiceCueNameControl);
+            _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.CueSheet_BGM, _bgmCueNameControl);
+            _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.CueSheet_SE, _seCueNameControl);
+            _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.CueSheet_ME, _meCueNameControl);
+            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice, _voiceCueNameControl);
         }
 
         private CueNameControl CreateCueNameControl(string label)
@@ -175,58 +175,58 @@ namespace HikanyanLaboratory.Audio
 
         private void UpdateBGMVolume()
         {
-            var players = _criAudioManager.GetPlayers(CriAudioType.BGM);
-            foreach (var player in players)
-            {
-                player.SetVolume(_bgmVolume);
-                // プレイバックを更新する必要がある場合はここで更新
-                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.BGM))
-                {
-                    player.Update(playerData.Playback);
-                }
-            }
+            // var players = _criAudioManager.GetPlayers(CriAudioType.BGM);
+            // foreach (var player in players)
+            // {
+            //     player.SetVolume(_bgmVolume);
+            //     // プレイバックを更新する必要がある場合はここで更新
+            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.BGM))
+            //     {
+            //         player.Update(playerData.Playback);
+            //     }
+            // }
         }
 
         private void UpdateSEVolume()
         {
-            var players = _criAudioManager.GetPlayers(CriAudioType.SE);
-            foreach (var player in players)
-            {
-                player.SetVolume(_seVolume);
-                // プレイバックを更新する必要がある場合はここで更新
-                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.SE))
-                {
-                    player.Update(playerData.Playback);
-                }
-            }
+            // var players = _criAudioManager.GetPlayers(CriAudioType.SE);
+            // foreach (var player in players)
+            // {
+            //     player.SetVolume(_seVolume);
+            //     // プレイバックを更新する必要がある場合はここで更新
+            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.SE))
+            //     {
+            //         player.Update(playerData.Playback);
+            //     }
+            // }
         }
 
         private void UpdateMEVolume()
         {
-            var players = _criAudioManager.GetPlayers(CriAudioType.ME);
-            foreach (var player in players)
-            {
-                player.SetVolume(_meVolume);
-                // プレイバックを更新する必要がある場合はここで更新
-                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.ME))
-                {
-                    player.Update(playerData.Playback);
-                }
-            }
+            // var players = _criAudioManager.GetPlayers(CriAudioType.ME);
+            // foreach (var player in players)
+            // {
+            //     player.SetVolume(_meVolume);
+            //     // プレイバックを更新する必要がある場合はここで更新
+            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.ME))
+            //     {
+            //         player.Update(playerData.Playback);
+            //     }
+            // }
         }
 
         private void UpdateVoiceVolume()
         {
-            var players = _criAudioManager.GetPlayers(CriAudioType.Voice);
-            foreach (var player in players)
-            {
-                player.SetVolume(_voiceVolume);
-                // プレイバックを更新する必要がある場合はここで更新
-                foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.Voice))
-                {
-                    player.Update(playerData.Playback);
-                }
-            }
+            // var players = _criAudioManager.GetPlayers(CriAudioType.Voice);
+            // foreach (var player in players)
+            // {
+            //     player.SetVolume(_voiceVolume);
+            //     // プレイバックを更新する必要がある場合はここで更新
+            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.Voice))
+            //     {
+            //         player.Update(playerData.Playback);
+            //     }
+            // }
         }
     }
 }

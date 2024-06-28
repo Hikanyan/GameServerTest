@@ -48,17 +48,17 @@ namespace HikanyanLaboratory.Audio
                 case CriAudioType.Master:
                     _criAudioManager.MasterVolume = value;
                     break;
-                case CriAudioType.BGM:
+                case CriAudioType.CueSheet_BGM:
                     _bgmVolume = value;
-                    UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.BGM), value);
+                    //UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.BGM), value);
                     break;
-                case CriAudioType.SE:
+                case CriAudioType.CueSheet_SE:
                     _seVolume = value;
-                    UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.SE), value);
+                    //UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.SE), value);
                     break;
-                case CriAudioType.ME:
+                case CriAudioType.CueSheet_ME:
                     _meVolume = value;
-                    UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.ME), value);
+                   //UpdateVolume(_criAudioManager.GetPlayerData(CriAudioType.ME), value);
                     break;
                 
                     break;
@@ -77,14 +77,14 @@ namespace HikanyanLaboratory.Audio
             };
         }
 
-        private void UpdateVolume(List<CriAudioManager.CriPlayerData> playerDataList,
-            float volume)
-        {
-            foreach (var playerData in playerDataList)
-            {
-                // playerData.Playback.SetVolume(volume);
-            }
-        }
+        // private void UpdateVolume(List<CriAudioManager.CriPlayerData> playerDataList,
+        //     float volume)
+        // {
+        //     foreach (var playerData in playerDataList)
+        //     {
+        //         // playerData.Playback.SetVolume(volume);
+        //     }
+        // }
 
         public void Play(CriAudioType audioType, string cueName)
         {
