@@ -82,7 +82,6 @@ namespace HikanyanLaboratory.Audio
             return cueNameControl;
         }
 
-
         private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
             UnityAction<string> onInputChanged)
         {
@@ -91,8 +90,6 @@ namespace HikanyanLaboratory.Audio
             volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
             return volumeControl;
         }
-
-
         private void OnMasterVolumeSliderChanged(float value)
         {
             _criAudioManager.MasterVolume = value / 100;
