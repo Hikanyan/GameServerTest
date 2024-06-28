@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HikanyanLaboratory.Network;
+using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UnityEditor;
@@ -13,46 +14,49 @@ namespace HikanyanLaboratory.Script.TitleScene
         [SerializeField] private GameObject _titleMenuCanvas;
         [SerializeField] private GameObject _optionCanvas;
         [SerializeField] private GameObject _LoginCanvas;
-        [SerializeField] private GameObject _debugCanvas;
 
         [Header("Button")] [SerializeField] private Button _startButton;
         [SerializeField] private Button _optionButton;
         [SerializeField] private Button _exitButton;
 
-
         private TitlePresenter _presenter;
 
         [Inject]
-        public TitleUIManager(TitlePresenter presenter)
+        public void Construct(TitlePresenter presenter)
         {
             _presenter = presenter;
+        }
+
+        private void Awake()
+        {
+            Initialize();
+            if (_presenter != null) _startButton.onClick.AddListener(_presenter.OnStartButtonPressed);
         }
 
         public void Initialize()
         {
             _backgroundCanvas.SetActive(true);
-            _titleUICanvas.SetActive(false);
+            _titleUICanvas.SetActive(true);
             _titleMenuCanvas.SetActive(false);
             _optionCanvas.SetActive(false);
-            _LoginCanvas.SetActive(false);
-            _debugCanvas.SetActive(false);
+            _LoginCanvas.SetActive(true);
+
+            _startButton.onClick.AddListener(() => _presenter.OnStartButtonPressed());
+            _optionButton.onClick.AddListener(ShowTitleMenu);
+            _exitButton.onClick.AddListener(() => Application.Quit());
         }
 
-        private void Awake()
-        {
-            _startButton.onClick.AddListener(_presenter.OnStartButtonPressed);
-        }
 
         public void ShowTitleMenu()
         {
-            _backgroundCanvas.SetActive(false);
+            _backgroundCanvas.SetActive(true);
             _titleUICanvas.SetActive(false);
             _titleMenuCanvas.SetActive(true);
         }
 
         public void ShowTitleUI()
         {
-            _backgroundCanvas.SetActive(false);
+            _backgroundCanvas.SetActive(true);
             _titleUICanvas.SetActive(true);
             _titleMenuCanvas.SetActive(false);
         }

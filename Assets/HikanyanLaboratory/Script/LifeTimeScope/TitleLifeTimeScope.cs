@@ -21,12 +21,19 @@ namespace HikanyanLaboratory.LifeTimeScope
             //     builder.RegisterInstance(sceneController);
             // }
 
-            builder.Register<TitleController>(Lifetime.Singleton);
+
+            // Sceneの依存関係を登録
+            builder.Register<SceneLoader>(Lifetime.Singleton);
+            builder.Register<ManagerSceneController>(Lifetime.Singleton);
+
+            // TitleSceneの依存関係を登録
             builder.Register<TitlePresenter>(Lifetime.Singleton);
-            builder.Register<ServiseLogin>(Lifetime.Singleton);
+            builder.Register<TitleController>(Lifetime.Singleton);
             builder.RegisterComponentInHierarchy<TitleUIManager>();
-            builder.RegisterComponentInHierarchy<OptionCanvasMono>();
-            //builder.RegisterEntryPoints();
+            builder.RegisterComponentInHierarchy<ServiseLogin>();
+
+            // 開始処理
+            builder.RegisterEntryPoint<TitlePresenter>();
         }
     }
 }

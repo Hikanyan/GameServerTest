@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using VContainer;
 
 namespace HikanyanLaboratory.System
 {
@@ -8,6 +9,7 @@ namespace HikanyanLaboratory.System
         private readonly SceneLoader _sceneLoader;
         private readonly Scene _currentScene;
 
+        [Inject]
         public ManagerSceneController(SceneLoader sceneLoader)
         {
             _sceneLoader = sceneLoader;
