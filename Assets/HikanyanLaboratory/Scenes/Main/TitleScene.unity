@@ -861,6 +861,30 @@ MonoBehaviour:
   _startButton: {fileID: 505601071}
   _optionButton: {fileID: 1494307328}
   _exitButton: {fileID: 1721659107}
+--- !u!114 &1127854413 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9212165486183012029, guid: b33aafc0825d04f4f8bd720f1cecc973,
+    type: 3}
+  m_PrefabInstance: {fileID: 1699996414}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1173198113 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4364710470316345150, guid: b33aafc0825d04f4f8bd720f1cecc973,
+    type: 3}
+  m_PrefabInstance: {fileID: 1699996414}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1179352828 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3167184336932331168, guid: 0bf805241e4718343843f8e93c672c3b,
@@ -954,6 +978,16 @@ PrefabInstance:
       propertyPath: _gameStartButton
       value: 
       objectReference: {fileID: 505601067}
+    - target: {fileID: 6013936820865217176, guid: b33aafc0825d04f4f8bd720f1cecc973,
+        type: 3}
+      propertyPath: _googleLoginButton
+      value: 
+      objectReference: {fileID: 1127854413}
+    - target: {fileID: 6013936820865217176, guid: b33aafc0825d04f4f8bd720f1cecc973,
+        type: 3}
+      propertyPath: _silentLoginButton
+      value: 
+      objectReference: {fileID: 1173198113}
     - target: {fileID: 8979457350382212528, guid: b33aafc0825d04f4f8bd720f1cecc973,
         type: 3}
       propertyPath: m_Pivot.x

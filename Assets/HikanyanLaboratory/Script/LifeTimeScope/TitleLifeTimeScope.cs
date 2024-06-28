@@ -35,10 +35,5 @@ namespace HikanyanLaboratory.LifeTimeScope
             // 開始処理
             builder.RegisterEntryPoint<TitlePresenter>();
         }
-
-        void Start()
-        {
-            UnityEngine.Debug.Log("TitleLifeTimeScope Start");
-        }
     }
 }
