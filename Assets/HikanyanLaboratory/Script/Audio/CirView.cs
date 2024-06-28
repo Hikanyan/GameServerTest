@@ -2,7 +2,9 @@
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -15,10 +17,11 @@ namespace HikanyanLaboratory.Audio
         [SerializeField] private GameObject cueNameControlPrefab;
         [SerializeField] private Transform volumeControlsParent;
         [SerializeField] private Transform cueNameControlsParent;
-        [SerializeField] private Button _playBgmButton;
-        [SerializeField] private Button _playSeButton;
-        [SerializeField] private Button _playMeButton;
-        [SerializeField] private Button _voiceButton;
+
+        [SerializeField] private LabelButton _bgmButton;
+        [SerializeField] private LabelButton _seButton;
+        [SerializeField] private LabelButton _meButton;
+        [SerializeField] private LabelButton _voiceButton;
 
         private CriAudioManager _criAudioManager;
 
@@ -28,17 +31,21 @@ namespace HikanyanLaboratory.Audio
         private VolumeControl _meVolumeControl;
         private VolumeControl _voiceVolumeControl;
 
-
         private CueNameControl _bgmCueNameControl;
         private CueNameControl _seCueNameControl;
         private CueNameControl _meCueNameControl;
         private CueNameControl _voiceCueNameControl;
 
-
         private float _bgmVolume = 1f;
         private float _seVolume = 1f;
         private float _meVolume = 1f;
         private float _voiceVolume = 1f;
+
+        // [Inject]
+        // public void Construct(CriAudioManager criAudioManager)
+        // {
+        //     _criAudioManager = criAudioManager;
+        // }
 
         private void Start()
         {
@@ -61,39 +68,10 @@ namespace HikanyanLaboratory.Audio
             _meCueNameControl = CreateCueNameControl("ME Cue Name");
             _voiceCueNameControl = CreateCueNameControl("Voice Cue Name");
 
-            _playBgmButton.onClick.AddListener(PlayBgm);
-            _playSeButton.onClick.AddListener(PlaySe);
-            _playMeButton.onClick.AddListener(PlayMe);
-            _voiceButton.onClick.AddListener(PlayVoice);
-        }
-
-        int _count = 0;
-        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
-            UnityAction<string> onInputChanged)
-        {
-            _count++;
-            if (volumeControlPrefab == null)
-            {
-                UnityEngine.Debug.LogError("volumeControlPrefab is not assigned.");
-                return null;
-            }
-
-            var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
-            if (volumeControlObject == null)
-            {
-                UnityEngine.Debug.LogError("Failed to instantiate volumeControlPrefab.");
-                return null;
-            }
-
-            var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
-            if (volumeControl == null)
-            {
-                UnityEngine.Debug.LogError("VolumeControl component not found on the instantiated prefab.");
-                return null;
-            }
-
-            volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
-            return volumeControl;
+            _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.BGM, _bgmCueNameControl);
+            _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.SE, _seCueNameControl);
+            _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.ME, _meCueNameControl);
+            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.Voice, _voiceCueNameControl);
         }
 
         private CueNameControl CreateCueNameControl(string label)
@@ -103,6 +81,17 @@ namespace HikanyanLaboratory.Audio
             cueNameControl.Initialize(label);
             return cueNameControl;
         }
+
+
+        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
+            UnityAction<string> onInputChanged)
+        {
+            var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
+            var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
+            volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
+            return volumeControl;
+        }
+
 
         private void OnMasterVolumeSliderChanged(float value)
         {
@@ -240,42 +229,6 @@ namespace HikanyanLaboratory.Audio
                 {
                     player.Update(playerData.Playback);
                 }
-            }
-        }
-
-        private void PlayBgm()
-        {
-            string cueName = _bgmCueNameControl.GetCueName();
-            if (!string.IsNullOrEmpty(cueName))
-            {
-                _criAudioManager.Play(CriAudioType.BGM, cueName);
-            }
-        }
-
-        private void PlaySe()
-        {
-            string cueName = _seCueNameControl.GetCueName();
-            if (!string.IsNullOrEmpty(cueName))
-            {
-                _criAudioManager.Play(CriAudioType.SE, cueName);
-            }
-        }
-
-        private void PlayMe()
-        {
-            string cueName = _meCueNameControl.GetCueName();
-            if (!string.IsNullOrEmpty(cueName))
-            {
-                _criAudioManager.Play(CriAudioType.ME, cueName);
-            }
-        }
-
-        private void PlayVoice()
-        {
-            string cueName = _voiceCueNameControl.GetCueName();
-            if (!string.IsNullOrEmpty(cueName))
-            {
-                _criAudioManager.Play(CriAudioType.Voice, cueName);
             }
         }
     }

@@ -18,16 +18,16 @@ namespace HikanyanLaboratory.Audio
         private Action<float> _masterVolumeChanged;
         private readonly Dictionary<CriAudioType, Action<float>> _volumeChanged = new();
 
-        private Dictionary<CriAudioType, CriAtomExPlayer> _players = new();
+        private readonly Dictionary<CriAudioType, CriAtomExPlayer> _players = new();
 
-        private Dictionary<CriAudioType, List<CriPlayerData>> _playerData = new();
+        private readonly Dictionary<CriAudioType, List<CriPlayerData>> _playerData = new();
 
         private CriAtomExPlayer _3dSePlayer;
         private CriAtomEx3dSource _3dSource;
         private CriAtomListener _listener;
 
-        private string _currentBGMCueName = "";
-        private CriAtomExAcb _currentBGMAcb = null;
+        private string _currentCueName = "";
+        private CriAtomExAcb _currentAcb = null;
 
         public float MasterVolume
         {
@@ -141,6 +141,13 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        /// <summary>
+        /// Typeに対応するCueSheetの名前で指定されたCueを再生します。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cueName"></param>
+        /// <param name="volume"></param>
+        /// <param name="is3d"></param>
         public void Play(CriAudioType type, string cueName, float volume = 1f, bool is3d = false)
         {
             var cueSheet = _cueSheets.Find(sheet => sheet.Type.Equals(type));
@@ -157,7 +164,7 @@ namespace HikanyanLaboratory.Audio
 
             var temp = CriAtom.GetCueSheet(cueSheet.Name).acb;
 
-            if (type.Equals(cueSheet.Type) && _currentBGMCueName == cueName &&
+            if (type.Equals(cueSheet.Type) && _currentCueName == cueName &&
                 _players[type].GetStatus() == CriAtomExPlayer.Status.Playing)
             {
                 return;
@@ -175,8 +182,8 @@ namespace HikanyanLaboratory.Audio
 
             player.SetCue(temp, cueName);
             var playback = player.Start();
-            _currentBGMAcb = temp;
-            _currentBGMCueName = cueName;
+            _currentAcb = temp;
+            _currentCueName = cueName;
 
             var newPlayerData = new CriPlayerData
             {
@@ -186,6 +193,10 @@ namespace HikanyanLaboratory.Audio
             _playerData[type].Add(newPlayerData);
         }
 
+        /// <summary>
+        /// Typeに対応するCueSheetの名前で指定されたCueを一時停止します。
+        /// </summary>
+        /// <param name="type"></param>
         public void Pause(CriAudioType type)
         {
             var playerDataList = _playerData[type];
@@ -195,6 +206,10 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        /// <summary>
+        /// Typeに対応するCueSheetの名前で指定されたCueを再開します。
+        /// </summary>
+        /// <param name="type"></param>
         public void Resume(CriAudioType type)
         {
             var playerDataList = _playerData[type];
@@ -204,6 +219,10 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        /// <summary>
+        /// Typeに対応するCueSheetの名前で指定されたCueを停止します。
+        /// </summary>
+        /// <param name="type"></param>
         public void Stop(CriAudioType type)
         {
             var playerDataList = _playerData[type];
@@ -215,6 +234,14 @@ namespace HikanyanLaboratory.Audio
             _playerData[type].Clear();
         }
 
+        public void Loop(CriAudioType type, bool isLoop)
+        {
+            var playerDataList = _playerData[type];
+            for (int i = 0; i < playerDataList.Count; i++)
+            {
+            }
+        }
+        
         private bool IsCue3D(string cueSheetName, string cueName)
         {
             var acb = CriAtom.GetCueSheet(cueSheetName).acb;
