@@ -12,15 +12,16 @@ namespace HikanyanLaboratory.Audio
     {
         [SerializeField] private string _streamingAssetsPathAcf = "Chronicle Dimention"; //.acf
         [SerializeField] private List<AudioCueSheet<CriAudioType>> _cueSheets;
-        private float _masterVolume = 1F;
+        private float _masterVolume = 1F;//マスターボリューム
         private const float Diff = 0.01F; //音量の変更があったかどうかの判定に使う
 
-        private Action<float> _masterVolumeChanged;
-        private readonly Dictionary<CriAudioType, Action<float>> _volumeChanged = new();
-
-        private readonly Dictionary<CriAudioType, CriAtomExPlayer> _players = new();
-
-        private readonly Dictionary<CriAudioType, List<CriPlayerData>> _playerData = new();
+        private Action<float> _masterVolumeChanged;//マスターボリューム変更時のイベント
+        private readonly Dictionary<CriAudioType, Action<float>> _volumeChanged = new();//音量変更時のイベント
+        private readonly Dictionary<CriAudioType, CriAtomExPlayer> _players = new();//再生用のプレイヤー
+        private readonly Dictionary<CriAudioType, List<CriPlayerData>> _playerData = new();//再生中のデータ
+        private readonly Dictionary<CriAudioType, CriAtomExPlayer> _3dPlayers = new();//3D再生用のプレイヤー
+        private readonly Dictionary<CriAudioType, List<CriPlayerData>> _3dPlayerData = new();//3D再生中のデータ
+        
 
         private CriAtomExPlayer _3dSePlayer;
         private CriAtomEx3dSource _3dSource;
@@ -68,7 +69,7 @@ namespace HikanyanLaboratory.Audio
 
             foreach (var cueSheet in _cueSheets)
             {
-                CriAtom.AddCueSheet(cueSheet.Name, $"{cueSheet.Name}.acb",
+                CriAtom.AddCueSheet(cueSheet.CueSheetName, $"{cueSheet.CueSheetName}.acb",
                     cueSheet.AwbPath != "" ? $"{cueSheet.AwbPath}.awb" : null, null);
 
                 if (!_players.ContainsKey(cueSheet.Type))
@@ -148,7 +149,7 @@ namespace HikanyanLaboratory.Audio
         /// <param name="cueName"></param>
         /// <param name="volume"></param>
         /// <param name="is3d"></param>
-        public void Play(CriAudioType type, string cueName, float volume = 1f, bool is3d = false)
+        public void Play(CriAudioType type, string cueName, float volume = 1f, bool is3d = false, bool isLoop = false)
         {
             var cueSheet = _cueSheets.Find(sheet => sheet.Type.Equals(type));
             if (cueSheet == null)
@@ -159,10 +160,10 @@ namespace HikanyanLaboratory.Audio
 
             if (!is3d)
             {
-                is3d = IsCue3D(cueSheet.Name, cueName);
+                is3d = IsCue3D(cueSheet.CueSheetName, cueName);
             }
 
-            var temp = CriAtom.GetCueSheet(cueSheet.Name).acb;
+            var temp = CriAtom.GetCueSheet(cueSheet.CueSheetName).acb;
 
             if (type.Equals(cueSheet.Type) && _currentCueName == cueName &&
                 _players[type].GetStatus() == CriAtomExPlayer.Status.Playing)
@@ -253,6 +254,10 @@ namespace HikanyanLaboratory.Audio
             }
 
             return false;
+        }
+        
+        public void Play3D(GameObject gameObject,CriAudioType type,string cueName,  float volume = 1f, bool isLoop = false)
+        {
         }
 
         protected override bool UseDontDestroyOnLoad => true;

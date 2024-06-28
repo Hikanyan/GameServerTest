@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -6,7 +7,9 @@ namespace HikanyanLaboratory.Audio
     public class AudioCueSheet<T> where T : Enum
     {
         public T Type;
-        public string Name;
+        public string CueSheetName;
+        public string AcfPath;
+        public string AcbPath;
         public string AwbPath;
     }
 }
