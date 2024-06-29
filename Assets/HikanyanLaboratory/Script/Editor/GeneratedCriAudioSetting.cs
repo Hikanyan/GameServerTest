@@ -24,8 +24,8 @@ namespace Hikanyan.Core
                 Debug.Log("CriAudioSetting asset found and will be updated.");
             }
 
-            // CriAudioLoaderを一時的に作成してキューシートの情報を取得
-            CriAudioLoader criAudioLoader = new GameObject("CriAudioLoader").AddComponent<CriAudioLoader>();
+            // CriAudioLoaderのインスタンスを作成してキューシートの情報を取得
+            CriAudioLoader criAudioLoader = new CriAudioLoader();
             criAudioLoader.SetCriAudioSetting(criAudioSetting);
             criAudioLoader.Initialize();
             criAudioLoader.SearchCueSheet();
@@ -35,10 +35,9 @@ namespace Hikanyan.Core
             criAudioSetting.SearchCueSheet();
             criAudioLoader.GenerateEnumFile();
 
-            // 変更を保存してリソースを解放
+            // 変更を保存
             EditorUtility.SetDirty(criAudioSetting);
             AssetDatabase.SaveAssets();
-            Object.DestroyImmediate(criAudioLoader.gameObject);
 
             Debug.Log("CriAudioSetting has been created or updated with ACF and CueSheet information.");
         }

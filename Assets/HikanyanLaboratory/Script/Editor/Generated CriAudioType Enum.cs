@@ -16,15 +16,13 @@ namespace Hikanyan.Core
 
             if (criAudioSetting != null)
             {
-                CriAudioLoader criAudioLoader = new GameObject("CriAudioLoader").AddComponent<CriAudioLoader>();
+                CriAudioLoader criAudioLoader = new CriAudioLoader();
                 criAudioLoader.SetCriAudioSetting(criAudioSetting);
                 
                 criAudioLoader.Initialize();
                 criAudioLoader.SearchCueSheet();
                 criAudioLoader.GenerateEnumFile();
                 Debug.Log("CriAudioType enum has been generated.");
-                
-                Object.DestroyImmediate(criAudioLoader.gameObject); // クリエートしたGameObjectを破棄
             }
             else
             {

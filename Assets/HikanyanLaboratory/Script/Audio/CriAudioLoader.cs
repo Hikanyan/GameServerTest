@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
 {
-    public class CriAudioLoader : MonoBehaviour
+    public class CriAudioLoader
     {
         private CriAudioSetting _audioSetting;
         private HashSet<string> enumEntries;
@@ -62,7 +62,7 @@ namespace HikanyanLaboratory.Audio
         {
             foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
-                UnityEngine.Debug.Log(
+                UnityEngine. Debug.Log(
                     $"Type: {cueSheet.Type}, CueSheetName: {cueSheet.CueSheetName}, AcfPath: {cueSheet.AcfPath}, AcbPath: {cueSheet.AcbPath}, AwbPath: {cueSheet.AwbPath}");
             }
         }
@@ -74,13 +74,13 @@ namespace HikanyanLaboratory.Audio
 
         public void GenerateEnumFile()
         {
-            string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Editor");
+            string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Audio");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
 
-            string filePath = Path.Combine(directoryPath, "GeneratedCriAudioTypeEnum.cs");
+            string filePath = Path.Combine(directoryPath, "CriAudioType.cs");
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
                 writer.WriteLine(CriAudioTypeFile());

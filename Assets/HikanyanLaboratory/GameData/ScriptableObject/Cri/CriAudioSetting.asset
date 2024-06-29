@@ -12,35 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 321b6021fa6b4f5b891f8939fa981813, type: 3}
   m_Name: CriAudioSetting
   m_EditorClassIdentifier: 
-  _streamingAssetsPathAcf: Chronicle Dimention
-  _audioCueSheet:
-  - Type: 
-    CueSheetName: 
-    AcfPath: 
-    AcbPath: 
-    AwbPath: 
-  - Type: 
-    CueSheetName: 
-    AcfPath: 
-    AcbPath: 
-    AwbPath: 
-  - Type: 
-    CueSheetName: 
-    AcfPath: 
-    AcbPath: 
-    AwbPath: 
-  - Type: CueSheet_BGM
-    CueSheetName: CueSheet_BGM
-    AcfPath: Chronicle Dimention
-    AcbPath: CueSheet_BGM
-    AwbPath: 
-  - Type: CueSheet_SE
-    CueSheetName: CueSheet_SE
-    AcfPath: Chronicle Dimention
-    AcbPath: CueSheet_SE
-    AwbPath: 
-  - Type: CueSheet_Voice
-    CueSheetName: CueSheet_Voice
-    AcfPath: Chronicle Dimention
-    AcbPath: CueSheet_Voice
-    AwbPath: 
+  _streamingAssetsPathAcf: 
+  _audioCueSheet: []
