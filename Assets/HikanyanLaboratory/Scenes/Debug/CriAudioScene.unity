@@ -1878,6 +1878,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1043440103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1043440105}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1043440105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043440103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1257172041 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4151531845055377031, guid: a1abefff83ae4db4ba1e215297d6a6e6,
@@ -2016,16 +2047,24 @@ MonoBehaviour:
   _streamingAssetsPathAcf: Chronicle Dimention
   _cueSheets:
   - Type: 0
-    Name: CueSheet_BGM
+    CueSheetName: CueSheet_BGM
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 1
-    Name: CueSheet_SE
+    CueSheetName: CueSheet_SE
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 2
-    Name: CueSheet_ME
+    CueSheetName: CueSheet_ME
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 3
-    Name: CueSheet_Voice
+    CueSheetName: CueSheet_Voice
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
 --- !u!114 &2045660646 stripped
 MonoBehaviour:
@@ -2049,3 +2088,4 @@ SceneRoots:
   - {fileID: 432499767}
   - {fileID: 1796729145}
   - {fileID: 1025702062}
+  - {fileID: 1043440105}
