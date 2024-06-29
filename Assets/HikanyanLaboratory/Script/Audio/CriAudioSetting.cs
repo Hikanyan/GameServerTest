@@ -15,5 +15,15 @@ namespace HikanyanLaboratory.Audio
 
         public string StreamingAssetsPathAcf => _streamingAssetsPathAcf;
         public List<AudioCueSheet<string>> AudioCueSheet => _audioCueSheet;
+        
+        public void Initialize()
+        {
+            _audioCueSheet = new List<AudioCueSheet<string>>();
+        }
+
+        public void SearchCueSheet()
+        {
+            
+        }
     }
 }

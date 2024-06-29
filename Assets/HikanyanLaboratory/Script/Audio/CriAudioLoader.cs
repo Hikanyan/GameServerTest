@@ -15,21 +15,6 @@ namespace HikanyanLaboratory.Audio
             _audioSetting = audioSetting;
         }
 
-        private void Awake()
-        {
-            if (_audioSetting == null)
-            {
-                UnityEngine.Debug.LogError("CriAudioSettingが設定されていません。");
-                return;
-            }
-
-            Initialize();
-            SearchCueSheet();
-        }
-
-        /// <summary>
-        /// 初期化
-        /// </summary>
         public void Initialize()
         {
             string path = Application.streamingAssetsPath + $"/{_audioSetting.StreamingAssetsPathAcf}.acf";
@@ -37,13 +22,9 @@ namespace HikanyanLaboratory.Audio
             CriAtomEx.RegisterAcf(null, path);
         }
 
-        /// <summary>
-        /// キューシートの検索
-        /// </summary>
         public void SearchCueSheet()
         {
-            // キューシートの検索と設定
-            string searchPath = Application.streamingAssetsPath; // 検索パスを指定
+            string searchPath = Application.streamingAssetsPath;
             string[] acbFiles = Directory.GetFiles(searchPath, "*.acb", SearchOption.AllDirectories);
 
             foreach (string acbFile in acbFiles)
@@ -52,7 +33,7 @@ namespace HikanyanLaboratory.Audio
                 string awbPath = acbPath.Replace(".acb", ".awb");
                 if (!File.Exists(awbPath))
                 {
-                    awbPath = string.Empty; // AWBファイルが見つからなかった場合は空白を設定
+                    awbPath = string.Empty;
                 }
 
                 CriAtomExAcb acb = CriAtomExAcb.LoadAcbFile(null, acbPath, awbPath);
@@ -64,22 +45,19 @@ namespace HikanyanLaboratory.Audio
                     string awbName = Path.GetFileNameWithoutExtension(awbPath);
                     var audioCueSheet = new AudioCueSheet<string>
                     {
-                        Type = cueSheetName, // string を使用
+                        Type = cueSheetName,
                         CueSheetName = cueSheetName,
                         AcfPath = _audioSetting.StreamingAssetsPathAcf,
                         AcbPath = acbName,
                         AwbPath = awbName
                     };
                     _audioSetting.AudioCueSheet.Add(audioCueSheet);
-                    enumEntries.Add(cueSheetName); // 新しい enum エントリを追加
+                    enumEntries.Add(cueSheetName);
                     acb.Dispose();
                 }
             }
         }
 
-        /// <summary>
-        /// キューシートの表示
-        /// </summary>
         public void DisplayCueSheets()
         {
             foreach (var cueSheet in _audioSetting.AudioCueSheet)
@@ -94,9 +72,6 @@ namespace HikanyanLaboratory.Audio
             return _audioSetting.AudioCueSheet;
         }
 
-        /// <summary>
-        /// CriAudioType enum を生成
-        /// </summary>
         public void GenerateEnumFile()
         {
             string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Editor");
@@ -106,7 +81,7 @@ namespace HikanyanLaboratory.Audio
             }
 
             string filePath = Path.Combine(directoryPath, "GeneratedCriAudioTypeEnum.cs");
-            using (StreamWriter writer = new StreamWriter(filePath, false)) // false を設定して上書き
+            using (StreamWriter writer = new StreamWriter(filePath, false))
             {
                 writer.WriteLine(CriAudioTypeFile());
             }
@@ -115,10 +90,6 @@ namespace HikanyanLaboratory.Audio
                 $"GeneratedCriAudioTypeEnum.cs has been generated at {filePath}. Please recompile the project.");
         }
 
-        /// <summary>
-        /// CriAudioType enum のテキストを生成
-        /// </summary>
-        /// <returns></returns>
         private string CriAudioTypeFile()
         {
             string text =
