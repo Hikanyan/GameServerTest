@@ -8,7 +8,7 @@ namespace HikanyanLaboratory.Audio
     public class CriAudioLoader
     {
         private CriAudioSetting _audioSetting;
-        private HashSet<string> enumEntries;
+        private HashSet<string> _enumEntries;
 
         public void SetCriAudioSetting(CriAudioSetting audioSetting)
         {
@@ -18,7 +18,7 @@ namespace HikanyanLaboratory.Audio
         public void Initialize()
         {
             string path = Application.streamingAssetsPath + $"/{_audioSetting.StreamingAssetsPathAcf}.acf";
-            enumEntries = new HashSet<string>();
+            _enumEntries = new HashSet<string>();
             CriAtomEx.RegisterAcf(null, path);
         }
 
@@ -52,7 +52,7 @@ namespace HikanyanLaboratory.Audio
                         AwbPath = awbName
                     };
                     _audioSetting.AudioCueSheet.Add(audioCueSheet);
-                    enumEntries.Add(cueSheetName);
+                    _enumEntries.Add(cueSheetName);
                     acb.Dispose();
                 }
             }
@@ -99,7 +99,7 @@ namespace HikanyanLaboratory.Audio
                 "    {\n" +
                 "        Master,";
 
-            foreach (var entry in enumEntries)
+            foreach (var entry in _enumEntries)
             {
                 text += $"\n        {entry},";
             }
