@@ -17,11 +17,11 @@ namespace Hikanyan.Core
             {
                 criAudioSetting = ScriptableObject.CreateInstance<CriAudioSetting>();
                 AssetDatabase.CreateAsset(criAudioSetting, assetPath);
-                Debug.Log("CriAudioSetting asset created.");
+                Debug.Log("CriAudioSetting asset が作成されました。");
             }
             else
             {
-                Debug.Log("CriAudioSetting asset found and will be updated.");
+                Debug.Log("CriAudioSetting asset は既に存在します。");
             }
 
             // CriAudioLoaderのインスタンスを作成してキューシートの情報を取得
@@ -33,13 +33,15 @@ namespace Hikanyan.Core
             // 取得したキューシート情報をCriAudioSettingに設定
             criAudioSetting.Initialize();
             criAudioSetting.SearchCueSheet();
-            criAudioLoader.GenerateEnumFile();
+            
+            // CriAudioTypeのEnumファイルを生成
+            //criAudioLoader.GenerateEnumFile();
 
             // 変更を保存
             EditorUtility.SetDirty(criAudioSetting);
             AssetDatabase.SaveAssets();
 
-            Debug.Log("CriAudioSetting has been created or updated with ACF and CueSheet information.");
+            Debug.Log("CriAudioSetting asset が更新されました。");
         }
     }
 }

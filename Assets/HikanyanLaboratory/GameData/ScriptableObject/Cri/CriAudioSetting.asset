@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: CriAudioSetting
   m_EditorClassIdentifier: 
   _streamingAssetsPathAcf: 
-  _audioCueSheet: []
+  _audioCueSheet:
+  - Type: CueSheet_BGM
+    CueSheetName: CueSheet_BGM
+    AcfPath: 
+    AcbPath: CueSheet_BGM
+    AwbPath: 
