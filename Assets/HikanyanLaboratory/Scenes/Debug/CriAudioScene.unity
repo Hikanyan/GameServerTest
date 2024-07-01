@@ -314,6 +314,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &371499909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 371499911}
+  - component: {fileID: 371499910}
+  m_Layer: 0
+  m_Name: CriAudioLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &371499910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371499909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b07a7685be4f228481f06b27142d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSetting: {fileID: 0}
+--- !u!4 &371499911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371499909}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &432499767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1878,6 +1923,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1043440103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1043440105}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1043440105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043440103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1257172041 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4151531845055377031, guid: a1abefff83ae4db4ba1e215297d6a6e6,
@@ -2016,16 +2092,24 @@ MonoBehaviour:
   _streamingAssetsPathAcf: Chronicle Dimention
   _cueSheets:
   - Type: 0
-    Name: CueSheet_BGM
+    CueSheetName: CueSheet_BGM
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 1
-    Name: CueSheet_SE
+    CueSheetName: CueSheet_SE
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 2
-    Name: CueSheet_ME
+    CueSheetName: CueSheet_ME
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
   - Type: 3
-    Name: CueSheet_Voice
+    CueSheetName: CueSheet_Voice
+    AcfPath: 
+    AcbPath: 
     AwbPath: 
 --- !u!114 &2045660646 stripped
 MonoBehaviour:
@@ -2049,3 +2133,5 @@ SceneRoots:
   - {fileID: 432499767}
   - {fileID: 1796729145}
   - {fileID: 1025702062}
+  - {fileID: 1043440105}
+  - {fileID: 371499911}

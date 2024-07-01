@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 namespace HikanyanLaboratory.Audio
 {
     [Serializable]
-    public class AudioCueSheet<T> where T : Enum
+    public class AudioCueSheet<T>
     {
         public T Type;
         public string CueSheetName;
