@@ -323,7 +323,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 371499911}
-  - component: {fileID: 371499910}
   m_Layer: 0
   m_Name: CriAudioLoader
   m_TagString: Untagged
@@ -331,19 +330,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &371499910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 371499909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50b07a7685be4f228481f06b27142d83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _audioSetting: {fileID: 0}
 --- !u!4 &371499911
 Transform:
   m_ObjectHideFlags: 0
