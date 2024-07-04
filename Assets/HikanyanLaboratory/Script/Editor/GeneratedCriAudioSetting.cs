@@ -32,14 +32,12 @@ namespace Hikanyan.Core
 
             // 取得したキューシート情報をCriAudioSettingに設定
             criAudioSetting.Initialize();
-            criAudioSetting.SearchCueSheet();
-            
-            // CriAudioTypeのEnumファイルを生成
-            //criAudioLoader.GenerateEnumFile();
+            criAudioSetting.SetAudioCueSheet(criAudioLoader.GetCueSheets());
 
             // 変更を保存
             EditorUtility.SetDirty(criAudioSetting);
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
 
             Debug.Log("CriAudioSetting asset が更新されました。");
         }

@@ -42,6 +42,12 @@ namespace HikanyanLaboratory.Audio
                 return;
             }
 
+            if (_audioSetting.AudioCueSheet == null)
+            {
+                UnityEngine.Debug.LogError("AudioCueSheet is not initialized.");
+                return;
+            }
+
             // キューシートリストをクリア
             _audioSetting.AudioCueSheet.Clear();
 

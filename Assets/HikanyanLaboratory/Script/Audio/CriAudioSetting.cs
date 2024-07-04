@@ -31,5 +31,15 @@ namespace HikanyanLaboratory.Audio
             criAudioLoader.SetCriAudioSetting(this);
             criAudioLoader.SearchCueSheet();
         }
+
+        public void SetStreamingAssetsPathAcf(string path)
+        {
+            _streamingAssetsPathAcf = path;
+        }
+
+        public void SetAudioCueSheet(List<AudioCueSheet<string>> cueSheets)
+        {
+            _audioCueSheet = cueSheets;
+        }
     }
 }
