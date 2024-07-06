@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CriWare;
 using UnityEngine;
 
@@ -45,6 +46,18 @@ namespace HikanyanLaboratory.Audio
             if (_audioSetting.AudioCueSheet == null)
             {
                 UnityEngine.Debug.LogError("AudioCueSheet is not initialized.");
+                return;
+            }
+            
+            // ACF ファイルを検索して設定
+            string acfFilePath = Directory.GetFiles(Application.streamingAssetsPath, "*.acf", SearchOption.AllDirectories).FirstOrDefault();
+            if (acfFilePath != null)
+            {
+                _audioSetting.SetStreamingAssetsPathAcf(acfFilePath);
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("No ACF file found in StreamingAssets.");
                 return;
             }
 
