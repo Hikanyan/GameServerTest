@@ -12,5 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 321b6021fa6b4f5b891f8939fa981813, type: 3}
   m_Name: CriAudioSetting
   m_EditorClassIdentifier: 
-  _streamingAssetsPathAcf: 
-  _audioCueSheet: []
+  _streamingAssetsPathAcf: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets\Chronicle
+    Dimention.acf
+  _audioCueSheet:
+  - Type: CueSheet_BGM
+    CueSheetName: CueSheet_BGM
+    AcfPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets\Chronicle
+      Dimention.acf
+    AcbPath: CueSheet_BGM
+    AwbPath: 
+  - Type: CueSheet_SE
+    CueSheetName: CueSheet_SE
+    AcfPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets\Chronicle
+      Dimention.acf
+    AcbPath: CueSheet_SE
+    AwbPath: 
+  - Type: CueSheet_Voice
+    CueSheetName: CueSheet_Voice
+    AcfPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets\Chronicle
+      Dimention.acf
+    AcbPath: CueSheet_Voice
+    AwbPath: 
