@@ -1,6 +1,7 @@
 using HikanyanLaboratory.Audio;
 using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Hikanyan.Core
 {
@@ -24,15 +25,29 @@ namespace Hikanyan.Core
                 Debug.Log("CriAudioSetting asset は既に存在します。");
             }
 
+            // 既存のAudioCueSheetエントリを保持
+            var existingCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet);
+
             // CriAudioLoaderのインスタンスを作成してキューシートの情報を取得
             CriAudioLoader criAudioLoader = new CriAudioLoader();
             criAudioLoader.SetCriAudioSetting(criAudioSetting);
             criAudioLoader.Initialize();
             criAudioLoader.SearchCueSheet();
 
-            // 取得したキューシート情報をCriAudioSettingに設定
-            criAudioSetting.Initialize();
-            criAudioSetting.SetAudioCueSheet(criAudioLoader.GetCueSheets());
+            // 新しいキューシート情報を取得
+            var newCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet);
+
+            // 既存の手動追加エントリを復元
+            foreach (var existingCueSheet in existingCueSheets)
+            {
+                if (!newCueSheets.Exists(cs => cs.CueSheetName == existingCueSheet.CueSheetName))
+                {
+                    newCueSheets.Add(existingCueSheet);
+                }
+            }
+
+            // 更新されたキューシート情報をCriAudioSettingに設定
+            criAudioSetting.SetAudioCueSheet(newCueSheets);
 
             // 変更を保存
             EditorUtility.SetDirty(criAudioSetting);

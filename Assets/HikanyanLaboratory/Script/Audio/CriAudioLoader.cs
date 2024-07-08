@@ -101,10 +101,34 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-
-        public List<AudioCueSheet<string>> GetCueSheets()
+        private HashSet<string> LoadExistingEnumEntries(string filePath)
         {
-            return _audioSetting?.AudioCueSheet;
+            var existingEntries = new HashSet<string>();
+
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    if (line.Trim().StartsWith("{") || line.Trim().StartsWith("namespace") || line.Trim().StartsWith("public enum CriAudioType"))
+                    {
+                        continue;
+                    }
+
+                    if (line.Trim().StartsWith("}"))
+                    {
+                        break;
+                    }
+
+                    var entry = line.Trim().TrimEnd(',').Trim();
+                    if (!string.IsNullOrEmpty(entry) && entry != "Master" && entry != "Other")
+                    {
+                        existingEntries.Add(entry);
+                    }
+                }
+            }
+
+            return existingEntries;
         }
 
         public void GenerateEnumFile()
@@ -116,6 +140,10 @@ namespace HikanyanLaboratory.Audio
             }
 
             string filePath = Path.Combine(directoryPath, "CriAudioType.cs");
+            var existingEntries = LoadExistingEnumEntries(filePath);
+
+            _enumEntries.UnionWith(existingEntries);
+
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
                 writer.WriteLine(CriAudioTypeFile());
