@@ -39,21 +39,25 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioSetting == null)
             {
-                UnityEngine.Debug.LogError("CriAudioSetting is not set.");
+                UnityEngine.Debug.LogError("CriAudioSetting が設定されていません。\n" +
+                                           "CriAudioSetting を設定してから呼び出してください。");
                 return;
             }
 
             if (_audioSetting.AudioCueSheet == null)
             {
-                UnityEngine.Debug.LogError("AudioCueSheet is not initialized.");
+                UnityEngine.Debug.LogError("AudioCueSheet が null です。\n" +
+                                           "AudioCueSheet を初期化してから呼び出してください。");
                 return;
             }
-            
+
             // ACF ファイルを検索して設定
-            string acfFilePath = Directory.GetFiles(Application.streamingAssetsPath, "*.acf", SearchOption.AllDirectories).FirstOrDefault();
+            string searchPath = Application.streamingAssetsPath;
+            string acfFilePath = Directory.GetFiles(searchPath, "*.acf", SearchOption.AllDirectories).FirstOrDefault();
             if (acfFilePath != null)
             {
-                _audioSetting.SetStreamingAssetsPathAcf(acfFilePath);
+                string acfFileName = Path.GetFileNameWithoutExtension(acfFilePath); // ファイル名のみ取得
+                _audioSetting.SetStreamingAssetsPathAcf(acfFileName);
             }
             else
             {
@@ -64,7 +68,7 @@ namespace HikanyanLaboratory.Audio
             // キューシートリストをクリア
             _audioSetting.AudioCueSheet.Clear();
 
-            string searchPath = Application.streamingAssetsPath;
+
             string[] acbFiles = Directory.GetFiles(searchPath, "*.acb", SearchOption.AllDirectories);
 
             foreach (string acbFile in acbFiles)
@@ -87,7 +91,6 @@ namespace HikanyanLaboratory.Audio
                     {
                         Type = cueSheetName,
                         CueSheetName = cueSheetName,
-                        AcfPath = _audioSetting.StreamingAssetsPathAcf,
                         AcbPath = acbName,
                         AwbPath = awbName
                     };
@@ -98,20 +101,6 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-        public void DisplayCueSheets()
-        {
-            if (_audioSetting == null)
-            {
-                UnityEngine.Debug.LogError("CriAudioSetting is not set.");
-                return;
-            }
-
-            foreach (var cueSheet in _audioSetting.AudioCueSheet)
-            {
-                UnityEngine.Debug.Log(
-                    $"Type: {cueSheet.Type}, CueSheetName: {cueSheet.CueSheetName}, AcfPath: {cueSheet.AcfPath}, AcbPath: {cueSheet.AcbPath}, AwbPath: {cueSheet.AwbPath}");
-            }
-        }
 
         public List<AudioCueSheet<string>> GetCueSheets()
         {
@@ -120,13 +109,13 @@ namespace HikanyanLaboratory.Audio
 
         public void GenerateEnumFile()
         {
-            string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Editor");
+            string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Audio");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
 
-            string filePath = Path.Combine(directoryPath, "GeneratedCriAudioTypeEnum.cs");
+            string filePath = Path.Combine(directoryPath, "CriAudioType.cs");
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
                 writer.WriteLine(CriAudioTypeFile());
