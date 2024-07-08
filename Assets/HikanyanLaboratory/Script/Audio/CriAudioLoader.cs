@@ -68,7 +68,6 @@ namespace HikanyanLaboratory.Audio
             // キューシートリストをクリア
             _audioSetting.AudioCueSheet.Clear();
 
-
             string[] acbFiles = Directory.GetFiles(searchPath, "*.acb", SearchOption.AllDirectories);
 
             foreach (string acbFile in acbFiles)
@@ -101,6 +100,11 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        /// <summary>
+        /// これは、既存のCriAudioType.csファイルを読み込み、既存のエントリをHashSetにロードします。
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         private HashSet<string> LoadExistingEnumEntries(string filePath)
         {
             var existingEntries = new HashSet<string>();
@@ -167,8 +171,7 @@ namespace HikanyanLaboratory.Audio
                 text += $"\n        {entry},";
             }
 
-            text += "\n" +
-                    "       Other\n" +
+            text += "\n        Other\n" +
                     "    }\n" +
                     "}";
 

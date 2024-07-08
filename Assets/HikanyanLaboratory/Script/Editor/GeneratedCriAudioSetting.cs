@@ -25,8 +25,11 @@ namespace Hikanyan.Core
                 Debug.Log("CriAudioSetting asset は既に存在します。");
             }
 
+            // 初期化
+            criAudioSetting.Initialize();
+
             // 既存のAudioCueSheetエントリを保持
-            var existingCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet);
+            var existingCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet ?? new List<AudioCueSheet<string>>());
 
             // CriAudioLoaderのインスタンスを作成してキューシートの情報を取得
             CriAudioLoader criAudioLoader = new CriAudioLoader();
@@ -35,7 +38,7 @@ namespace Hikanyan.Core
             criAudioLoader.SearchCueSheet();
 
             // 新しいキューシート情報を取得
-            var newCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet);
+            var newCueSheets = new List<AudioCueSheet<string>>(criAudioSetting.AudioCueSheet ?? new List<AudioCueSheet<string>>());
 
             // 既存の手動追加エントリを復元
             foreach (var existingCueSheet in existingCueSheets)
