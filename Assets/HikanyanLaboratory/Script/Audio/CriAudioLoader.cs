@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CriWare;
+using UnityEditor;
 using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
@@ -11,6 +12,7 @@ namespace HikanyanLaboratory.Audio
     {
         private CriAudioSetting _audioSetting;
         private HashSet<string> _enumEntries;
+        private CriAtomExAcb previewAcb = null;
 
         public void SetCriAudioSetting(CriAudioSetting audioSetting)
         {
@@ -31,9 +33,27 @@ namespace HikanyanLaboratory.Audio
                 return;
             }
 
+            InitializeCri();
             string path = Application.streamingAssetsPath + $"/{_audioSetting.StreamingAssetsPathAcf}.acf";
             _enumEntries = new HashSet<string>();
             CriAtomEx.RegisterAcf(null, path);
+        }
+
+        private static void InitializeCri()
+        {
+            Debug.Log("Initializing CRI in Editor...");
+            if (!CriAtomPlugin.IsLibraryInitialized())
+            {
+                CriAtomPlugin.InitializeLibrary();
+                Debug.Log("CRI Initialized in Editor.");
+            }
+        }
+
+        private static void FinalizeCri()
+        {
+            Debug.Log("Finalizing CRI...");
+            CriAtomPlugin.FinalizeLibrary();
+            Debug.Log("CRI Finalized.");
         }
 
         public void SearchCueSheet()
@@ -105,6 +125,8 @@ namespace HikanyanLaboratory.Audio
                     acb.Dispose();
                 }
             }
+
+            FinalizeCri();
         }
 
         /// <summary>
