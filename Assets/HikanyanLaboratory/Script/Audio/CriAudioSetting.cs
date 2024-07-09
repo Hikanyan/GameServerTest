@@ -10,9 +10,11 @@ namespace HikanyanLaboratory.Audio
     {
         [SerializeField] private string _streamingAssetsPathAcf;
         [SerializeField] private List<AudioCueSheet<string>> _audioCueSheet;
-        [SerializeField] private List<string> _cueNames;
+        [SerializeField] private Dictionary<CriAudioType, List<string>> _cueSheetDictionary = new();
+
         public string StreamingAssetsPathAcf => _streamingAssetsPathAcf;
         public List<AudioCueSheet<string>> AudioCueSheet => _audioCueSheet;
+        public Dictionary<CriAudioType, List<string>> CueSheetDictionary => _cueSheetDictionary;
 
         /// <summary>
         /// 初期化
@@ -20,6 +22,7 @@ namespace HikanyanLaboratory.Audio
         public void Initialize()
         {
             _audioCueSheet ??= new List<AudioCueSheet<string>>();
+            _cueSheetDictionary.Clear();
         }
 
         /// <summary>
@@ -42,15 +45,32 @@ namespace HikanyanLaboratory.Audio
             _audioCueSheet = cueSheets;
         }
 
-
-        public string GetCueName(int index)
+        public void AddCueSheet(CriAudioType cueSheetType, List<string> cueNames)
         {
-            if (index < _cueNames.Count)
+            if (!_cueSheetDictionary.ContainsKey(cueSheetType))
             {
-                return _cueNames[index];
+                _cueSheetDictionary[cueSheetType] = cueNames;
+            }
+        }
+
+        public string GetCueName(CriAudioType cueSheetType, int index)
+        {
+            if (_cueSheetDictionary.ContainsKey(cueSheetType) && index < _cueSheetDictionary[cueSheetType].Count)
+            {
+                return _cueSheetDictionary[cueSheetType][index];
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// キュー名を取得する
+        /// </summary>
+        /// <param name="cueSheetType"></param>
+        /// <returns></returns>
+        public List<string> GetCueNames(CriAudioType cueSheetType)
+        {
+            return _cueSheetDictionary.TryGetValue(cueSheetType, out var value) ? value : new List<string>();
         }
     }
 }

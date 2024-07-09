@@ -20,8 +20,8 @@ namespace HikanyanLaboratory.Audio
 
         public void PlaySound(int cueNum)
         {
-            string cueName = _criAudioSetting.GetCueName(cueNum);
-            PlaySound(cueName);
+            // string cueName = _criAudioSetting.GetCueName(cueNum);
+            // PlaySound(cueName);
         }
 
         public void PlaySound3D(GameObject gameObject, string cueName)
@@ -33,8 +33,8 @@ namespace HikanyanLaboratory.Audio
 
         public void PlaySound3D(GameObject gameObject, int cueNum)
         {
-            string cueName = _criAudioSetting.GetCueName(cueNum);
-            PlaySound3D(gameObject, cueName);
+            // string cueName = _criAudioSetting.GetCueName(cueNum);
+            // PlaySound3D(gameObject, cueName);
         }
 
         public void StopSound(string cueName)
@@ -45,8 +45,8 @@ namespace HikanyanLaboratory.Audio
 
         public void StopSound(int index)
         {
-            string cueName = _criAudioSetting.GetCueName(index);
-            StopSound(cueName);
+            // string cueName = _criAudioSetting.GetCueName(index);
+            // StopSound(cueName);
         }
 
         public void PauseSound(string cueName)
@@ -57,8 +57,8 @@ namespace HikanyanLaboratory.Audio
 
         public void PauseSound(int index)
         {
-            string cueName = _criAudioSetting.GetCueName(index);
-            PauseSound(cueName);
+            // string cueName = _criAudioSetting.GetCueName(index);
+            // PauseSound(cueName);
         }
 
         public void ResumeSound(string cueName)
@@ -69,8 +69,8 @@ namespace HikanyanLaboratory.Audio
 
         public void ResumeSound(int index)
         {
-            string cueName = _criAudioSetting.GetCueName(index);
-            ResumeSound(cueName);
+            // string cueName = _criAudioSetting.GetCueName(index);
+            // ResumeSound(cueName);
         }
 
         public void SetVolume(float volume)
