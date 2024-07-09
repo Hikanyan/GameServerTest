@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using HikanyanLaboratory.System;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -10,16 +11,16 @@ namespace HikanyanLaboratory.Audio
     {
         [SerializeField] private string _streamingAssetsPathAcf;
         [SerializeField] private List<AudioCueSheet<string>> _audioCueSheet;
-        [SerializeField] private Dictionary<CriAudioType, List<string>> _cueSheetDictionary = new();
+        [SerializeField] private SerializableDictionary<CriAudioType, List<string>, AudioCueSheetPair> _cueSheetDictionary;
 
         public string StreamingAssetsPathAcf => _streamingAssetsPathAcf;
         public List<AudioCueSheet<string>> AudioCueSheet => _audioCueSheet;
-        public Dictionary<CriAudioType, List<string>> CueSheetDictionary => _cueSheetDictionary;
+        public SerializableDictionary<CriAudioType, List<string>, AudioCueSheetPair> CueSheetDictionary => _cueSheetDictionary;
 
         public void Initialize()
         {
             _audioCueSheet ??= new List<AudioCueSheet<string>>();
-            _cueSheetDictionary.Clear();
+            _cueSheetDictionary = new SerializableDictionary<CriAudioType, List<string>, AudioCueSheetPair>();
         }
 
         public void SearchCueSheet()
@@ -41,17 +42,14 @@ namespace HikanyanLaboratory.Audio
 
         public void AddCueSheet(CriAudioType cueSheetType, List<string> cueNames)
         {
-            if (!_cueSheetDictionary.ContainsKey(cueSheetType))
-            {
-                _cueSheetDictionary[cueSheetType] = cueNames;
-            }
+            _cueSheetDictionary.Add(cueSheetType, cueNames);
         }
 
         public string GetCueName(CriAudioType cueSheetType, int index)
         {
-            if (_cueSheetDictionary.ContainsKey(cueSheetType) && index < _cueSheetDictionary[cueSheetType].Count)
+            if (_cueSheetDictionary.TryGetValue(cueSheetType, out var cueNames) && index < cueNames.Count)
             {
-                return _cueSheetDictionary[cueSheetType][index];
+                return cueNames[index];
             }
 
             return string.Empty;
@@ -59,12 +57,18 @@ namespace HikanyanLaboratory.Audio
 
         public List<string> GetCueNames(CriAudioType cueSheetType)
         {
-            if (_cueSheetDictionary.ContainsKey(cueSheetType))
+            if (_cueSheetDictionary.TryGetValue(cueSheetType, out var cueNames))
             {
-                return _cueSheetDictionary[cueSheetType];
+                return cueNames;
             }
 
             return new List<string>();
         }
+    }
+
+    [Serializable]
+    public class AudioCueSheetPair : Pair<CriAudioType, List<string>>
+    {
+        public AudioCueSheetPair(CriAudioType key, List<string> value) : base(key, value) { }
     }
 }
