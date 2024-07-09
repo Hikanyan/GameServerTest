@@ -1,5 +1,5 @@
 using System;
-using HikanyanLaboratory.Debug;
+using HikanyanLaboratory.DebugMode;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;

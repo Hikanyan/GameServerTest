@@ -1,6 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using HikanyanLaboratory.Debug;
+using HikanyanLaboratory.DebugMode;
 using PlayFab;
 using PlayFab.ClientModels;
 using VContainer.Unity;
