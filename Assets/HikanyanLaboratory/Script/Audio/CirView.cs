@@ -49,10 +49,10 @@ namespace HikanyanLaboratory.Audio
 
         private void Start()
         {
-            _criAudioManager = CriAudioManager.Instance;
+            //_criAudioManager = CriAudioManager.Instance;
 
-            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume,
-                OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
+            //_masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume,
+                //OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
             _bgmVolumeControl = CreateVolumeControl("BGM Volume", _bgmVolume, OnBgmVolumeSliderChanged,
                 OnBgmVolumeInputChanged);
             _seVolumeControl =
@@ -92,7 +92,7 @@ namespace HikanyanLaboratory.Audio
         }
         private void OnMasterVolumeSliderChanged(float value)
         {
-            _criAudioManager.MasterVolume = value / 100;
+           // _criAudioManager.MasterVolume = value / 100;
             _masterVolumeControl.SetValue(value / 100);
         }
 
@@ -128,7 +128,7 @@ namespace HikanyanLaboratory.Audio
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _criAudioManager.MasterVolume = floatValue / 100;
+               // _criAudioManager.MasterVolume = floatValue / 100;
                 _masterVolumeControl.SetValue(floatValue / 100);
             }
         }

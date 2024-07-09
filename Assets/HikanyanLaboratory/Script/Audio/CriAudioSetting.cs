@@ -10,7 +10,7 @@ namespace HikanyanLaboratory.Audio
     {
         [SerializeField] private string _streamingAssetsPathAcf;
         [SerializeField] private List<AudioCueSheet<string>> _audioCueSheet;
-
+        [SerializeField] private List<string> _cueNames;
         public string StreamingAssetsPathAcf => _streamingAssetsPathAcf;
         public List<AudioCueSheet<string>> AudioCueSheet => _audioCueSheet;
 
@@ -40,6 +40,17 @@ namespace HikanyanLaboratory.Audio
         public void SetAudioCueSheet(List<AudioCueSheet<string>> cueSheets)
         {
             _audioCueSheet = cueSheets;
+        }
+
+
+        public string GetCueName(int index)
+        {
+            if (index < _cueNames.Count)
+            {
+                return _cueNames[index];
+            }
+
+            return string.Empty;
         }
     }
 }

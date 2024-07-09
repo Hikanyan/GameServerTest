@@ -27,7 +27,7 @@ namespace HikanyanLaboratory.Audio
 
         public void Initialize(string label, CriAudioType audioType, CueNameControl cueNameControl)
         {
-            _criAudioManager = CriAudioManager.Instance;
+            //_criAudioManager = CriAudioManager.Instance;
             _label = label;
             _audioType = audioType;
             _cueNameControl = cueNameControl;
@@ -45,7 +45,7 @@ namespace HikanyanLaboratory.Audio
             UnityEngine.Debug.Log(_cueName);
             if (!string.IsNullOrEmpty(_cueName))
             {
-                _criAudioManager.Play(_audioType, _cueName);
+                //_criAudioManager.Play(_audioType, _cueName);
             }
         }
 

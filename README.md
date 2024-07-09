@@ -99,3 +99,38 @@ classDiagram
     PlayFabController --> PlayFabAuthService
 
 ```
+CriAudioPresenterは、AudioManagerのラッパーとして機能し、プレゼンテーションロジックを提供します。このクラスは、AudioManagerを使いやすくし、より高レベルの操作を提供するためのものです。具体的には以下のような機能を提供します：
+
+高レベルのオーディオ操作：
+
+AudioManagerのメソッドをラップし、呼び出しを簡素化する
+必要に応じて追加のプレゼンテーションロジックを追加
+依存関係の管理：
+```mermaid
+classDiagram
+    class AudioManager {
+        +Play()
+        +Stop()
+        +Pause()
+        +Resume()
+        +Volume()
+    }
+
+    class CriAudioPresenter {
+        +PlayBGM()
+        +StopBGM()
+        +PauseBGM()
+        +ResumeBGM()
+        +VolumeBGM()
+        +PlaySE()
+        +StopSE()
+        +PauseSE()
+        +ResumeSE()
+        +VolumeSE()
+    }
+    
+    
+    
+    AudioManager <|-- CriAudioPresenter
+```
+
