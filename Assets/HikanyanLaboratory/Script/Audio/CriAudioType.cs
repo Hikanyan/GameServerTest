@@ -4,8 +4,8 @@ namespace HikanyanLaboratory.Audio
     {
         Master,
         CueSheet_BGM,
-        CueSheet_SE,
         CueSheet_ME,
+        CueSheet_SE,
         CueSheet_Voice,
         Other
     }

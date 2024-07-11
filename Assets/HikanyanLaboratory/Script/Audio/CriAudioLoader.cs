@@ -101,40 +101,8 @@ namespace HikanyanLaboratory.Audio
         }
 
         /// <summary>
-        /// これは、既存のCriAudioType.csファイルを読み込み、既存のエントリをHashSetにロードします。
+        /// Enumファイルを生成
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private HashSet<string> LoadExistingEnumEntries(string filePath)
-        {
-            var existingEntries = new HashSet<string>();
-
-            if (File.Exists(filePath))
-            {
-                var lines = File.ReadAllLines(filePath);
-                foreach (var line in lines)
-                {
-                    if (line.Trim().StartsWith("{") || line.Trim().StartsWith("namespace") || line.Trim().StartsWith("public enum CriAudioType"))
-                    {
-                        continue;
-                    }
-
-                    if (line.Trim().StartsWith("}"))
-                    {
-                        break;
-                    }
-
-                    var entry = line.Trim().TrimEnd(',').Trim();
-                    if (!string.IsNullOrEmpty(entry) && entry != "Master" && entry != "Other")
-                    {
-                        existingEntries.Add(entry);
-                    }
-                }
-            }
-
-            return existingEntries;
-        }
-
         public void GenerateEnumFile()
         {
             string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Audio");
@@ -144,9 +112,6 @@ namespace HikanyanLaboratory.Audio
             }
 
             string filePath = Path.Combine(directoryPath, "CriAudioType.cs");
-            var existingEntries = LoadExistingEnumEntries(filePath);
-
-            _enumEntries.UnionWith(existingEntries);
 
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
@@ -154,8 +119,9 @@ namespace HikanyanLaboratory.Audio
             }
 
             UnityEngine.Debug.Log(
-                $"GeneratedCriAudioTypeEnum.cs has been generated at {filePath}. Please recompile the project.");
+                $"CriAudioType.cs has been generated at {filePath}. Please recompile the project.");
         }
+
 
         private string CriAudioTypeFile()
         {
@@ -166,9 +132,9 @@ namespace HikanyanLaboratory.Audio
                 "    {\n" +
                 "        Master,";
 
-            foreach (var entry in _enumEntries)
+            foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
-                text += $"\n        {entry},";
+                text += $"\n        {cueSheet.CueSheetName},";
             }
 
             text += "\n        Other\n" +

@@ -18,6 +18,10 @@ MonoBehaviour:
     CueSheetName: CueSheet_BGM
     AcbPath: CueSheet_BGM
     AwbPath: 
+  - Type: CueSheet_ME
+    CueSheetName: CueSheet_ME
+    AcbPath: CueSheet_ME
+    AwbPath: 
   - Type: CueSheet_SE
     CueSheetName: CueSheet_SE
     AcbPath: CueSheet_SE
@@ -25,8 +29,4 @@ MonoBehaviour:
   - Type: CueSheet_Voice
     CueSheetName: CueSheet_Voice
     AcbPath: CueSheet_Voice
-    AwbPath: 
-  - Type: CueSheet_ME
-    CueSheetName: CueSheet_ME
-    AcbPath: CueSheet_ME
     AwbPath: 
