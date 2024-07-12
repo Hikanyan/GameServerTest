@@ -123,5 +123,17 @@ namespace HikanyanLaboratory.Audio
 
             _players.Clear();
         }
+
+        public bool CheckCueSheet()
+        {
+            var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
+            if (tempAcb == null)
+            {
+                Debug.LogWarning($"ACBがNullです。CueSheet: {_cueSheetName}");
+                return false;
+            }
+
+            return true;
+        }
     }
 }
