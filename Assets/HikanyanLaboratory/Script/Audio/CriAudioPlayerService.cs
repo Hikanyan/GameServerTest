@@ -9,7 +9,6 @@ namespace HikanyanLaboratory.Audio
         private readonly string _cueSheetName;
         private readonly List<CriAtomExPlayer> _players = new List<CriAtomExPlayer>();
         private readonly List<CriPlayerData> _data = new List<CriPlayerData>();
-        private readonly CriAtomEx3dSource _3dSource;
         private readonly CriAtomListener _listener;
         private float _volume = 1f;
         private float _masterVolume = 1f;
@@ -17,7 +16,6 @@ namespace HikanyanLaboratory.Audio
         public CriAudioPlayerService(string cueSheetName, CriAtomEx3dSource source, CriAtomListener listener)
         {
             _cueSheetName = cueSheetName;
-            _3dSource = source;
             _listener = listener;
         }
 
@@ -31,7 +29,7 @@ namespace HikanyanLaboratory.Audio
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             if (tempAcb == null)
             {
-                UnityEngine.Debug.LogWarning($"ACBがNullです。CueSheet: {_cueSheetName}");
+                Debug.LogWarning($"ACBがNullです。CueSheet: {_cueSheetName}");
                 return;
             }
 
@@ -54,7 +52,7 @@ namespace HikanyanLaboratory.Audio
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             if (tempAcb == null)
             {
-                UnityEngine.Debug.LogWarning($"ACBがNullです。CueSheet: {_cueSheetName}");
+                Debug.LogWarning($"ACBがNullです。CueSheet: {_cueSheetName}");
                 return;
             }
 
@@ -63,7 +61,7 @@ namespace HikanyanLaboratory.Audio
             newAtomPlayer.CueInfo = cueInfo;
 
             CriAtomExPlayer player = new CriAtomExPlayer();
-            player.Set3dSource(_3dSource);
+            player.Set3dSource(new CriAtomEx3dSource());
             player.Set3dListener(_listener.nativeListener);
             player.SetCue(tempAcb, cueName);
             player.SetVolume(volume * _volume * _masterVolume);
@@ -75,8 +73,9 @@ namespace HikanyanLaboratory.Audio
 
             // 更新された位置を設定
             Vector3 position = gameObject.transform.position;
-            _3dSource.SetPosition(position.x, position.y, position.z);
-            _3dSource.Update();
+            var source = player.Get3dSource();
+            source.SetPosition(position.x, position.y, position.z);
+            source.Update();
         }
 
         public void Stop(int index)
@@ -117,7 +116,7 @@ namespace HikanyanLaboratory.Audio
             _masterVolume = masterVolume;
             SetVolume(_volume);
         }
-        
+
         public void Dispose()
         {
             foreach (var player in _players)

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using CriWare;
-using Cysharp.Threading.Tasks;
 using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +16,6 @@ namespace HikanyanLaboratory.Audio
         public Action<float> MasterVolumeChanged; //マスターボリューム変更時のイベント
         private Dictionary<CriAudioType, ICriAudioPlayerService> _audioPlayers; //各音声の再生を管理するクラス
 
-        private CriAtomEx3dSource _3dSource; //3D音源
         private CriAtomListener _listener; //リスナー
         protected override bool UseDontDestroyOnLoad => true;
         public CriAudioType CriAudioType { get; set; }
@@ -30,16 +27,12 @@ namespace HikanyanLaboratory.Audio
             CriAtomEx.RegisterAcf(null, path);
 
             // CriAtom作成
-            transform.gameObject.AddComponent<CriAtom>();
-
-            _3dSource = new CriAtomEx3dSource();
-            _3dSource.SetPosition(0, 0, 0);
-            _3dSource.Update();
+            gameObject.AddComponent<CriAtom>();
 
             _listener = FindObjectOfType<CriAtomListener>();
             if (_listener == null)
             {
-                UnityEngine.Debug.LogWarning($"{nameof(CriAtomListener)} が見つかりません。");
+                _listener = gameObject.AddComponent<CriAtomListener>();
             }
 
             _audioPlayers = new Dictionary<CriAudioType, ICriAudioPlayerService>();
@@ -47,7 +40,15 @@ namespace HikanyanLaboratory.Audio
             foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
                 CriAtom.AddCueSheet(cueSheet.CueSheetName, cueSheet.AcbPath, cueSheet.AwbPath, null);
-                _audioPlayers.Add(CriAudioType, new CriAudioPlayerService(cueSheet.CueSheetName, _3dSource, _listener));
+                if (cueSheet.CueSheetName == "BGM")
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_BGM, new BGMPlayer(cueSheet.CueSheetName, _listener));
+                }
+                else if (cueSheet.CueSheetName == "SE")
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_SE, new SEPlayer(cueSheet.CueSheetName, _listener));
+                }
+                // 他のCriAudioTypeも同様に追加可能
             }
 
             MasterVolumeChanged += volume =>
@@ -60,7 +61,6 @@ namespace HikanyanLaboratory.Audio
 
             SceneManager.sceneUnloaded += Unload;
         }
-
 
         private void OnDestroy()
         {
@@ -78,28 +78,27 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-        public void Play(CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
+        public void Play(CriAudioType type, string cueName)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Play(cueName, volume, isLoop);
+                player.Play(cueName, 1f, false);
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"Audio type {type} not supported.");
+                Debug.LogWarning($"Audio type {type} not supported.");
             }
         }
 
-        public void Play3D(GameObject gameObject, CriAudioType type, string cueName, float volume = 1f,
-            bool isLoop = false)
+        public void Play3D(GameObject gameObject, CriAudioType type, string cueName)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Play3D(gameObject, cueName, volume, isLoop);
+                player.Play3D(gameObject, cueName, 1f, false);
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"3D audio type {type} not supported.");
+                Debug.LogWarning($"3D audio type {type} not supported.");
             }
         }
 

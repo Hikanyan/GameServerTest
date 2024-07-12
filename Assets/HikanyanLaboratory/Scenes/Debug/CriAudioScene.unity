@@ -330,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &384457857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2222,24 +2222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f8a053ec114aea99a6058aa8d623bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _streamingAssetsPathAcf: Chronicle Dimention
-  _cueSheets:
-  - Type: 0
-    CueSheetName: 
-    AcbPath: 
-    AwbPath: 
-  - Type: 1
-    CueSheetName: 
-    AcbPath: 
-    AwbPath: 
-  - Type: 2
-    CueSheetName: 
-    AcbPath: 
-    AwbPath: 
-  - Type: 3
-    CueSheetName: 
-    AcbPath: 
-    AwbPath: 
+  _audioSetting: {fileID: 11400000, guid: bea36feef40616b48a0e43bc16a093e6, type: 2}
 --- !u!114 &2045660646 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1900330623219085893, guid: a1abefff83ae4db4ba1e215297d6a6e6,
