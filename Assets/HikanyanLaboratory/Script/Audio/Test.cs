@@ -10,7 +10,7 @@ namespace HikanyanLaboratory.Audio
 
         void Start()
         {
-            CriAudioManager.Instance.Play(_criAudioType, _cueSheetName);
+            CriAudioManager.Instance.Play(_criAudioType, _cueSheetName,true);
         }
     }
 }

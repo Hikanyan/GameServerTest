@@ -2144,8 +2144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba60eac15f145b4b794af96d5d93095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _criAudioType: 1
-  _cueSheetName: Running Through The Galaxy 20220629
+  _criAudioType: 3
+  _cueSheetName: Long
 --- !u!4 &1633229282
 Transform:
   m_ObjectHideFlags: 0

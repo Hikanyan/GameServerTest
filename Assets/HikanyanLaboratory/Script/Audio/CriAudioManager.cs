@@ -14,13 +14,12 @@ namespace HikanyanLaboratory.Audio
         private float _masterVolume = 1F; // マスターボリューム
         private const float Diff = 0.01F; // 音量の変更があったかどうかの判定に使う
 
-        public Action<float> MasterVolumeChanged; // マスターボリューム変更時のイベント
+        private Action<float> _masterVolumeChanged; // マスターボリューム変更時のイベント
         private Dictionary<CriAudioType, ICriAudioPlayerService> _audioPlayers; // 各音声の再生を管理するクラス
 
         private CriAtomListener _listener; // リスナー
         protected override bool UseDontDestroyOnLoad => true;
-        public CriAudioType CriAudioType { get; set; }
-        
+
         [Inject]
         private void Construct(CriAudioSetting audioSetting)
         {
@@ -71,7 +70,7 @@ namespace HikanyanLaboratory.Audio
                 // 他のCriAudioTypeも同様に追加可能
             }
 
-            MasterVolumeChanged += volume =>
+            _masterVolumeChanged += volume =>
             {
                 foreach (var player in _audioPlayers)
                 {
@@ -93,40 +92,105 @@ namespace HikanyanLaboratory.Audio
             set
             {
                 if (!(_masterVolume + Diff < value) && !(_masterVolume - Diff > value)) return;
-                MasterVolumeChanged?.Invoke(value);
+                _masterVolumeChanged?.Invoke(value);
                 _masterVolume = value;
             }
         }
 
-        public Player Play(CriAudioType type, string cueName)
+        public void Play(CriAudioType type, string cueName)
+        {
+            Play(type, cueName, 1f, false);
+        }
+
+        public void Play(CriAudioType type, string cueName, bool isLoop = false)
+        {
+            Play(type, cueName, 1f, isLoop);
+        }
+
+        public void Play(CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
                 Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
-                return new Player(player, cueName).Play();
+                player.Play(cueName, volume, isLoop);
             }
             else
             {
                 Debug.LogWarning($"Audio type {type} not supported.");
-                return null;
             }
         }
 
-        public Player Play3D(GameObject gameObject, CriAudioType type, string cueName)
+        public void Play3D(Transform transform, CriAudioType type, string cueName)
+        {
+            Play3D(transform, type, cueName, 1f, false);
+        }
+
+        public void Play3D(Transform transform, CriAudioType type, string cueName, bool isLoop)
+        {
+            Play3D(transform, type, cueName, 1f, isLoop);
+        }
+
+        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f,
+            bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                return new Player(player, cueName).Play3D(gameObject);
+                Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
+                player.Play3D(transform, cueName, volume, isLoop);
             }
             else
             {
                 Debug.LogWarning($"3D audio type {type} not supported.");
-                return null;
+            }
+        }
+
+        public void Pause(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Pause(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+        public void Resume(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Resume(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+        public void Stop(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Stop(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
             }
         }
 
         private void Unload(Scene scene)
         {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            SceneManager.sceneUnloaded -= Unload;
             foreach (var player in _audioPlayers.Values)
             {
                 player.Dispose();

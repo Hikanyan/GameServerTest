@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CriWare;
 using UnityEngine;
+using NotImplementedException = System.NotImplementedException;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -41,13 +42,14 @@ namespace HikanyanLaboratory.Audio
             player.SetCue(tempAcb, cueName);
             player.SetVolume(volume * _volume * _masterVolume);
             player.Loop(isLoop);
+            Debug.Log($"Loop: {isLoop}");
             newAtomPlayer.Playback = player.Start();
 
             _players.Add(player);
             _data.Add(newAtomPlayer);
         }
 
-        public void Play3D(GameObject gameObject, string cueName, float volume, bool isLoop)
+        public void Play3D(Transform transform, string cueName, float volume, bool isLoop)
         {
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             if (tempAcb == null)
@@ -61,7 +63,7 @@ namespace HikanyanLaboratory.Audio
             newAtomPlayer.CueInfo = cueInfo;
 
             CriAtomEx3dSource source = new CriAtomEx3dSource();
-            source.SetPosition(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+            source.SetPosition(transform.position.x, transform.position.y, transform.position.z);
             source.Update();
 
             CriAtomExPlayer player = new CriAtomExPlayer();
@@ -76,28 +78,31 @@ namespace HikanyanLaboratory.Audio
             _data.Add(newAtomPlayer);
         }
 
-        public void Stop(int index)
+        public void Pause(string cueName)
         {
-            if (index < 0 || index >= _data.Count) return;
-
-            _data[index].Playback.Stop();
-            _players[index].Dispose();
-            _players.RemoveAt(index);
-            _data.RemoveAt(index);
+            foreach (var player in _players)
+            {
+                player.Pause();
+            }
         }
 
-        public void Pause(int index)
+        public void Resume(string cueName)
         {
-            if (index < 0 || index >= _data.Count) return;
-
-            _data[index].Playback.Pause();
+            foreach (var player in _players)
+            {
+                player.Resume(CriAtomEx.ResumeMode.PausedPlayback);
+            }
         }
 
-        public void Resume(int index)
+        public void Stop(string cueName)
         {
-            if (index < 0 || index >= _data.Count) return;
+            foreach (var player in _players)
+            {
+                player.Stop();
+                player.Dispose();
+            }
 
-            _data[index].Playback.Resume(CriAtomEx.ResumeMode.AllPlayback);
+            _players.Clear();
         }
 
         public void SetVolume(float volume)
@@ -105,14 +110,8 @@ namespace HikanyanLaboratory.Audio
             _volume = volume;
             foreach (var player in _players)
             {
-                player.SetVolume(_volume * _masterVolume);
+                player.SetVolume(_volume);
             }
-        }
-
-        public void SetMasterVolume(float masterVolume)
-        {
-            _masterVolume = masterVolume;
-            SetVolume(_volume);
         }
 
         public void Dispose()
@@ -121,6 +120,8 @@ namespace HikanyanLaboratory.Audio
             {
                 player.Dispose();
             }
+
+            _players.Clear();
         }
     }
 }

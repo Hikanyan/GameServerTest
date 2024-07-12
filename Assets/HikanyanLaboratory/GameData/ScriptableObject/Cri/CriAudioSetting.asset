@@ -18,10 +18,9 @@ MonoBehaviour:
     CueSheetName: CueSheet_BGM
     AcbPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets/CueSheet_BGM.acb
     AwbPath: 
+  - Type: CueSheet_SE
+    CueSheetName: CueSheet_SE
+    AcbPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets/CueSheet_SE.acb
+    AwbPath: 
   _cueSheetDictionary:
-    _pairs:
-    - Key: 0
-      Value: []
-    - Key: 1
-      Value:
-      - Running Through The Galaxy 20220629
+    _pairs: []

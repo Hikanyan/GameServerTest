@@ -1,5 +1,4 @@
 ﻿using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,11 +18,7 @@ namespace HikanyanLaboratory.Audio
         private CriAudioManager _criAudioManager;
         private CriAudioType _audioType;
         private string _cueName;
-
-        // public void Construct(CriAudioManager criAudioManager)
-        // {
-        //     _criAudioManager = criAudioManager;
-        // }
+        private bool _isLoop;
 
         public void Initialize(string label, CriAudioType audioType, CueNameControl cueNameControl)
         {
@@ -44,27 +39,28 @@ namespace HikanyanLaboratory.Audio
             _cueName = _cueNameControl.GetCueName();
             if (!string.IsNullOrEmpty(_cueName))
             {
-                _criAudioManager.Play(_audioType, _cueName);
+                _criAudioManager.Play(_audioType, _cueName, _isLoop);
             }
         }
 
         public void Pause()
         {
-            //_criAudioManager.Pause(_audioType);
+            _criAudioManager.Pause(_audioType, _cueName);
         }
 
         public void Resume()
         {
-            //_criAudioManager.Resume(_audioType);
+            _criAudioManager.Resume(_audioType, _cueName);
         }
 
         public void Stop()
         {
-            //_criAudioManager.Stop(_audioType);
+            _criAudioManager.Stop(_audioType, _cueName);
         }
+
         public void Loop(bool isLoop)
         {
-            //_criAudioManager.Loop(_audioType, isLoop);
+            _isLoop = isLoop;
         }
     }
 }
