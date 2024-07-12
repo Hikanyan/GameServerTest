@@ -13,7 +13,7 @@ namespace HikanyanLaboratory.Audio
         private float _volume = 1f;
         private float _masterVolume = 1f;
 
-        public CriAudioPlayerService(string cueSheetName, CriAtomEx3dSource source, CriAtomListener listener)
+        public CriAudioPlayerService(string cueSheetName, CriAtomListener listener)
         {
             _cueSheetName = cueSheetName;
             _listener = listener;
@@ -60,8 +60,12 @@ namespace HikanyanLaboratory.Audio
             tempAcb.GetCueInfo(cueName, out var cueInfo);
             newAtomPlayer.CueInfo = cueInfo;
 
+            CriAtomEx3dSource source = new CriAtomEx3dSource();
+            source.SetPosition(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+            source.Update();
+
             CriAtomExPlayer player = new CriAtomExPlayer();
-            player.Set3dSource(new CriAtomEx3dSource());
+            player.Set3dSource(source);
             player.Set3dListener(_listener.nativeListener);
             player.SetCue(tempAcb, cueName);
             player.SetVolume(volume * _volume * _masterVolume);
@@ -70,12 +74,6 @@ namespace HikanyanLaboratory.Audio
 
             _players.Add(player);
             _data.Add(newAtomPlayer);
-
-            // 更新された位置を設定
-            Vector3 position = gameObject.transform.position;
-            var source = player.Get3dSource();
-            source.SetPosition(position.x, position.y, position.z);
-            source.Update();
         }
 
         public void Stop(int index)
