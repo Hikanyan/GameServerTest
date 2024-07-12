@@ -45,7 +45,8 @@ namespace HikanyanLaboratory.Audio
 
             foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
-                CriAtom.AddCueSheet(cueSheet.CueSheetName, cueSheet.AcbPath, cueSheet.AwbPath, null);
+                CriAtom.AddCueSheet(cueSheet.CueSheetName, $"{cueSheet.AcbPath}.acb",
+                    cueSheet.AwbPath != "" ? $"{cueSheet.AwbPath}.awb" : null, null);
                 if (cueSheet.CueSheetName == CriAudioType.CueSheet_BGM.ToString())
                 {
                     _audioPlayers.Add(CriAudioType.CueSheet_BGM, new BGMPlayer(cueSheet.CueSheetName, _listener));
