@@ -12,5 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 321b6021fa6b4f5b891f8939fa981813, type: 3}
   m_Name: CriAudioSetting
   m_EditorClassIdentifier: 
-  _streamingAssetsPathAcf: 
-  _audioCueSheet: []
+  _streamingAssetsPathAcf: Chronicle Dimention
+  _audioCueSheet:
+  - Type: CueSheet_BGM
+    CueSheetName: CueSheet_BGM
+    AcbPath: CueSheet_BGM
+    AwbPath: 
+  - Type: CueSheet_SE
+    CueSheetName: CueSheet_SE
+    AcbPath: CueSheet_SE
+    AwbPath: 
+  _cueSheetDictionary:
+    _pairs: []

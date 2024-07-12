@@ -13,10 +13,10 @@ namespace HikanyanLaboratory.Audio
     /// </summary>
     public class CirView : MonoBehaviour
     {
-        [SerializeField] private GameObject volumeControlPrefab;
-        [SerializeField] private GameObject cueNameControlPrefab;
-        [SerializeField] private Transform volumeControlsParent;
-        [SerializeField] private Transform cueNameControlsParent;
+        [SerializeField] private GameObject _volumeControlPrefab;
+        [SerializeField] private GameObject _cueNameControlPrefab;
+        [SerializeField] private Transform _volumeControlsParent;
+        [SerializeField] private Transform _cueNameControlsParent;
 
         [SerializeField] private LabelButton _bgmButton;
         [SerializeField] private LabelButton _seButton;
@@ -41,11 +41,11 @@ namespace HikanyanLaboratory.Audio
         private float _meVolume = 1f;
         private float _voiceVolume = 1f;
 
-        // [Inject]
-        // public void Construct(CriAudioManager criAudioManager)
-        // {
-        //     _criAudioManager = criAudioManager;
-        // }
+        [Inject]
+        public void Construct(CriAudioManager criAudioManager)
+        {
+            _criAudioManager = criAudioManager;
+        }
 
         private void Start()
         {
@@ -71,12 +71,13 @@ namespace HikanyanLaboratory.Audio
             _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.CueSheet_BGM, _bgmCueNameControl);
             _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.CueSheet_SE, _seCueNameControl);
             _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.CueSheet_ME, _meCueNameControl);
-            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice, _voiceCueNameControl);
+            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice,
+                _voiceCueNameControl);
         }
 
         private CueNameControl CreateCueNameControl(string label)
         {
-            var cueNameControlObject = Instantiate(cueNameControlPrefab, cueNameControlsParent);
+            var cueNameControlObject = Instantiate(_cueNameControlPrefab, _cueNameControlsParent);
             var cueNameControl = cueNameControlObject.GetComponent<CueNameControl>();
             cueNameControl.Initialize(label);
             return cueNameControl;
@@ -85,11 +86,12 @@ namespace HikanyanLaboratory.Audio
         private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
             UnityAction<string> onInputChanged)
         {
-            var volumeControlObject = Instantiate(volumeControlPrefab, volumeControlsParent);
+            var volumeControlObject = Instantiate(_volumeControlPrefab, _volumeControlsParent);
             var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
             volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
             return volumeControl;
         }
+
         private void OnMasterVolumeSliderChanged(float value)
         {
             _criAudioManager.MasterVolume = value / 100;
@@ -175,58 +177,38 @@ namespace HikanyanLaboratory.Audio
 
         private void UpdateBGMVolume()
         {
-            // var players = _criAudioManager.GetPlayers(CriAudioType.BGM);
-            // foreach (var player in players)
-            // {
-            //     player.SetVolume(_bgmVolume);
-            //     // プレイバックを更新する必要がある場合はここで更新
-            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.BGM))
-            //     {
-            //         player.Update(playerData.Playback);
-            //     }
-            // }
+            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_BGM);
+            foreach (var player in players)
+            {
+                player.SetVolume(_bgmVolume);
+            }
         }
 
         private void UpdateSEVolume()
         {
-            // var players = _criAudioManager.GetPlayers(CriAudioType.SE);
-            // foreach (var player in players)
-            // {
-            //     player.SetVolume(_seVolume);
-            //     // プレイバックを更新する必要がある場合はここで更新
-            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.SE))
-            //     {
-            //         player.Update(playerData.Playback);
-            //     }
-            // }
+            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_SE);
+            foreach (var player in players)
+            {
+                player.SetVolume(_seVolume);
+            }
         }
 
         private void UpdateMEVolume()
         {
-            // var players = _criAudioManager.GetPlayers(CriAudioType.ME);
-            // foreach (var player in players)
-            // {
-            //     player.SetVolume(_meVolume);
-            //     // プレイバックを更新する必要がある場合はここで更新
-            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.ME))
-            //     {
-            //         player.Update(playerData.Playback);
-            //     }
-            // }
+            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_ME);
+            foreach (var player in players)
+            {
+                player.SetVolume(_meVolume);
+            }
         }
 
         private void UpdateVoiceVolume()
         {
-            // var players = _criAudioManager.GetPlayers(CriAudioType.Voice);
-            // foreach (var player in players)
-            // {
-            //     player.SetVolume(_voiceVolume);
-            //     // プレイバックを更新する必要がある場合はここで更新
-            //     foreach (var playerData in _criAudioManager.GetPlayerData(CriAudioType.Voice))
-            //     {
-            //         player.Update(playerData.Playback);
-            //     }
-            // }
+            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_Voice);
+            foreach (var player in players)
+            {
+                player.SetVolume(_voiceVolume);
+            }
         }
     }
 }

@@ -37,13 +37,11 @@ MonoBehaviour:
       communicationBufferSize: 2048
       playbackPositionUpdateInterval: 8
     serverFrequency: 60
-    speakerMapping: 0
     asrOutputChannels: 0
     useRandomSeedWithTime: 1
     categoriesPerPlayback: 4
     maxFaders: 4
     maxBuses: 8
-    maxPitch: 2400
     maxParameterBlocks: 1024
     soundRendererType: 1
     keepPlayingSoundOnPause: 1

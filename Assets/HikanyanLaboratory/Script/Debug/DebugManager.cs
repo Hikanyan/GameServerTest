@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HikanyanLaboratory.Debug
+namespace HikanyanLaboratory.DebugMode
 {
     public class DebugManager
     {

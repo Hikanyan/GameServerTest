@@ -20,8 +20,8 @@ namespace Hikanyan.Core
                 criAudioLoader.SetCriAudioSetting(criAudioSetting);
                 
                 criAudioLoader.Initialize();
-                criAudioLoader.SearchCueSheet();
                 criAudioLoader.GenerateEnumFile();
+                
                 Debug.Log("CriAudioType enum has been generated.");
             }
             else

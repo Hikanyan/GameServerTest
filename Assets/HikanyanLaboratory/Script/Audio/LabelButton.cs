@@ -1,5 +1,4 @@
 ﻿using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,11 +18,7 @@ namespace HikanyanLaboratory.Audio
         private CriAudioManager _criAudioManager;
         private CriAudioType _audioType;
         private string _cueName;
-
-        // public void Construct(CriAudioManager criAudioManager)
-        // {
-        //     _criAudioManager = criAudioManager;
-        // }
+        private bool _isLoop;
 
         public void Initialize(string label, CriAudioType audioType, CueNameControl cueNameControl)
         {
@@ -32,40 +27,45 @@ namespace HikanyanLaboratory.Audio
             _audioType = audioType;
             _cueNameControl = cueNameControl;
 
+            _loopToggle.isOn = false;
+            _isLoop = false;
+
+            _loopToggle.onValueChanged.AddListener(Loop);
             _playButton.onClick.AddListener(Play);
             _pauseButton.onClick.AddListener(Pause);
             _resumeButton.onClick.AddListener(Resume);
             _stopButton.onClick.AddListener(Stop);
-            _loopToggle.onValueChanged.AddListener(Loop);
         }
 
         public void Play()
         {
             _cueName = _cueNameControl.GetCueName();
-            UnityEngine.Debug.Log(_cueName);
             if (!string.IsNullOrEmpty(_cueName))
             {
-                _criAudioManager.Play(_audioType, _cueName);
+                _criAudioManager.Play(_audioType, _cueName, _isLoop);
+                Debug.Log($"CriAudioType: {_audioType}, CueName: {_cueName}, Loop: {_isLoop}");
             }
         }
 
         public void Pause()
         {
-            //_criAudioManager.Pause(_audioType);
+            _criAudioManager.Pause(_audioType, _cueName);
         }
 
         public void Resume()
         {
-            //_criAudioManager.Resume(_audioType);
+            _criAudioManager.Resume(_audioType, _cueName);
         }
 
         public void Stop()
         {
-            //_criAudioManager.Stop(_audioType);
+            _criAudioManager.Stop(_audioType, _cueName);
         }
+
         public void Loop(bool isLoop)
         {
-            //_criAudioManager.Loop(_audioType, isLoop);
+            _isLoop = isLoop;
+            Debug.Log($"Loop: {_isLoop}");
         }
     }
 }

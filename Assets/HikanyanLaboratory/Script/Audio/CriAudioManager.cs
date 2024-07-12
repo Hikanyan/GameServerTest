@@ -1,58 +1,77 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using CriWare;
-using Cysharp.Threading.Tasks;
 using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
     public class CriAudioManager : AbstractSingletonMonoBehaviour<CriAudioManager>
     {
-        [SerializeField] private string _streamingAssetsPathAcf = "Chronicle Dimention"; //.acf
-        [SerializeField] private List<AudioCueSheet<CriAudioType>> _cueSheets;
+        [SerializeField] private CriAudioSetting _audioSetting;
+        private float _masterVolume = 1F; // マスターボリューム
+        private const float Diff = 0.01F; // 音量の変更があったかどうかの判定に使う
 
-        private float _masterVolume = 1F; //マスターボリューム
-        private const float Diff = 0.01F; //音量の変更があったかどうかの判定に使う
+        private Action<float> _masterVolumeChanged; // マスターボリューム変更時のイベント
+        private Dictionary<CriAudioType, ICriAudioPlayerService> _audioPlayers; // 各音声の再生を管理するクラス
 
-        public Action<float> MasterVolumeChanged; //マスターボリューム変更時のイベント
-        private Dictionary<CriAudioType, ICriAudioPlayer> _audioPlayers;//各音声の再生を管理するクラス
-
-        private CriAtomEx3dSource _3dSource;//3D音源
-        private CriAtomListener _listener;//リスナー
+        private CriAtomListener _listener; // リスナー
         protected override bool UseDontDestroyOnLoad => true;
 
+        [Inject]
+        private void Construct(CriAudioSetting audioSetting)
+        {
+            _audioSetting = audioSetting;
+        }
 
         private void Awake()
         {
             // ACF設定
-            string path = Application.streamingAssetsPath + $"/{_streamingAssetsPathAcf}.acf";
+            string path = Application.streamingAssetsPath + $"/{_audioSetting.StreamingAssetsPathAcf}.acf";
             CriAtomEx.RegisterAcf(null, path);
 
             // CriAtom作成
-            transform.gameObject.AddComponent<CriAtom>();
-
-            _3dSource = new CriAtomEx3dSource();
-            _3dSource.SetPosition(0, 0, 0);
-            _3dSource.Update();
+            gameObject.AddComponent<CriAtom>();
 
             _listener = FindObjectOfType<CriAtomListener>();
             if (_listener == null)
             {
-                UnityEngine.Debug.LogWarning($"{nameof(CriAtomListener)} が見つかりません。");
+                _listener = gameObject.AddComponent<CriAtomListener>();
             }
 
-            _audioPlayers = new Dictionary<CriAudioType, ICriAudioPlayer>();
+            _audioPlayers = new Dictionary<CriAudioType, ICriAudioPlayerService>();
 
-            foreach (var cueSheet in _cueSheets)
+            foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
-                CriAtom.AddCueSheet(cueSheet.CueSheetName, cueSheet.AcbPath, cueSheet.AwbPath, null);
-                _audioPlayers[cueSheet.Type] = new CriAudioPlayer(cueSheet.CueSheetName, _3dSource, _listener);
+                CriAtom.AddCueSheet(cueSheet.CueSheetName, $"{cueSheet.AcbPath}.acb",
+                    cueSheet.AwbPath != "" ? $"{cueSheet.AwbPath}.awb" : null, null);
+                if (cueSheet.CueSheetName == CriAudioType.CueSheet_BGM.ToString())
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_BGM, new BGMPlayer(cueSheet.CueSheetName, _listener));
+                }
+                else if (cueSheet.CueSheetName == CriAudioType.CueSheet_SE.ToString())
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_SE, new SEPlayer(cueSheet.CueSheetName, _listener));
+                }
+                else if (cueSheet.CueSheetName == CriAudioType.CueSheet_Voice.ToString())
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_Voice, new VoicePlayer(cueSheet.CueSheetName, _listener));
+                }
+                else if (cueSheet.CueSheetName == CriAudioType.CueSheet_ME.ToString())
+                {
+                    _audioPlayers.Add(CriAudioType.CueSheet_ME, new MEPlayer(cueSheet.CueSheetName, _listener));
+                }
+                else if (cueSheet.CueSheetName == CriAudioType.Other.ToString())
+                {
+                    _audioPlayers.Add(CriAudioType.Other, new OtherPlayer(cueSheet.CueSheetName, _listener));
+                }
+
+                // 他のCriAudioTypeも同様に追加可能
             }
 
-            MasterVolumeChanged += volume =>
+            _masterVolumeChanged += volume =>
             {
                 foreach (var player in _audioPlayers)
                 {
@@ -74,38 +93,115 @@ namespace HikanyanLaboratory.Audio
             set
             {
                 if (!(_masterVolume + Diff < value) && !(_masterVolume - Diff > value)) return;
-                MasterVolumeChanged?.Invoke(value);
+                _masterVolumeChanged?.Invoke(value);
                 _masterVolume = value;
             }
+        }
+
+        public void Play(CriAudioType type, string cueName)
+        {
+            Play(type, cueName, 1f, false);
+        }
+
+        public void Play(CriAudioType type, string cueName, bool isLoop = false)
+        {
+            Play(type, cueName, 1f, isLoop);
         }
 
         public void Play(CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
+                Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
                 player.Play(cueName, volume, isLoop);
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"Audio type {type} not supported.");
+                Debug.LogWarning($"Audio type {type} not supported.");
             }
         }
 
-        public void Play3D(GameObject gameObject, CriAudioType type, string cueName, float volume = 1f,
+        public void Play3D(Transform transform, CriAudioType type, string cueName)
+        {
+            Play3D(transform, type, cueName, 1f, false);
+        }
+
+        public void Play3D(Transform transform, CriAudioType type, string cueName, bool isLoop)
+        {
+            Play3D(transform, type, cueName, 1f, isLoop);
+        }
+
+        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f,
             bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Play3D(gameObject, cueName, volume, isLoop);
+                Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
+                player.Play3D(transform, cueName, volume, isLoop);
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"3D audio type {type} not supported.");
+                Debug.LogWarning($"3D audio type {type} not supported.");
             }
+        }
+
+        public void Pause(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Pause(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+        public void Resume(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Resume(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+        public void Stop(CriAudioType type, string cueName)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.Stop(cueName);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+        public List<ICriAudioPlayerService> GetPlayers(CriAudioType type)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                return new List<ICriAudioPlayerService> { player };
+            }
+
+            return new List<ICriAudioPlayerService>();
         }
 
         private void Unload(Scene scene)
         {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            SceneManager.sceneUnloaded -= Unload;
             foreach (var player in _audioPlayers.Values)
             {
                 player.Dispose();
