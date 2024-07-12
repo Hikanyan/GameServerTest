@@ -2,7 +2,7 @@
 
 namespace HikanyanLaboratory.Audio
 {
-    public interface ICriAudioPlayer
+    public interface ICriAudioPlayerService
     {
         void Play(string cueName, float volume = 1f, bool isLoop = false);
         void Play3D(GameObject gameObject, string cueName, float volume= 1f, bool isLoop= false);

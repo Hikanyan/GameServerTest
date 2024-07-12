@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
 {
-    public class CriAudioPlayer : ICriAudioPlayer
+    public class CriAudioPlayerService : ICriAudioPlayerService
     {
         private readonly string _cueSheetName;
         private readonly List<CriAtomExPlayer> _players = new List<CriAtomExPlayer>();
@@ -14,14 +14,14 @@ namespace HikanyanLaboratory.Audio
         private float _volume = 1f;
         private float _masterVolume = 1f;
 
-        public CriAudioPlayer(string cueSheetName, CriAtomEx3dSource source, CriAtomListener listener)
+        public CriAudioPlayerService(string cueSheetName, CriAtomEx3dSource source, CriAtomListener listener)
         {
             _cueSheetName = cueSheetName;
             _3dSource = source;
             _listener = listener;
         }
 
-        ~CriAudioPlayer()
+        ~CriAudioPlayerService()
         {
             Dispose();
         }
