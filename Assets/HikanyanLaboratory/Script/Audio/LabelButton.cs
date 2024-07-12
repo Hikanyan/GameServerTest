@@ -27,11 +27,14 @@ namespace HikanyanLaboratory.Audio
             _audioType = audioType;
             _cueNameControl = cueNameControl;
 
+            _loopToggle.isOn = false;
+            _isLoop = false;
+
+            _loopToggle.onValueChanged.AddListener(Loop);
             _playButton.onClick.AddListener(Play);
             _pauseButton.onClick.AddListener(Pause);
             _resumeButton.onClick.AddListener(Resume);
             _stopButton.onClick.AddListener(Stop);
-            _loopToggle.onValueChanged.AddListener(Loop);
         }
 
         public void Play()
@@ -40,6 +43,7 @@ namespace HikanyanLaboratory.Audio
             if (!string.IsNullOrEmpty(_cueName))
             {
                 _criAudioManager.Play(_audioType, _cueName, _isLoop);
+                Debug.Log($"CriAudioType: {_audioType}, CueName: {_cueName}, Loop: {_isLoop}");
             }
         }
 
@@ -61,6 +65,7 @@ namespace HikanyanLaboratory.Audio
         public void Loop(bool isLoop)
         {
             _isLoop = isLoop;
+            Debug.Log($"Loop: {_isLoop}");
         }
     }
 }

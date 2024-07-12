@@ -12,7 +12,7 @@ namespace HikanyanLaboratory.Audio
         private readonly List<CriPlayerData> _data = new List<CriPlayerData>();
         private readonly CriAtomListener _listener;
         private float _volume = 1f;
-        private float _masterVolume = 1f;
+        private const float MasterVolume = 1f;
 
         public CriAudioPlayerService(string cueSheetName, CriAtomListener listener)
         {
@@ -25,7 +25,7 @@ namespace HikanyanLaboratory.Audio
             Dispose();
         }
 
-        public void Play(string cueName, float volume, bool isLoop)
+        public virtual void Play(string cueName, float volume, bool isLoop)
         {
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             if (tempAcb == null)
@@ -40,7 +40,7 @@ namespace HikanyanLaboratory.Audio
 
             CriAtomExPlayer player = new CriAtomExPlayer();
             player.SetCue(tempAcb, cueName);
-            player.SetVolume(volume * _volume * _masterVolume);
+            player.SetVolume(volume * _volume * MasterVolume);
             player.Loop(isLoop);
             Debug.Log($"Loop: {isLoop}");
             newAtomPlayer.Playback = player.Start();
@@ -49,7 +49,7 @@ namespace HikanyanLaboratory.Audio
             _data.Add(newAtomPlayer);
         }
 
-        public void Play3D(Transform transform, string cueName, float volume, bool isLoop)
+        public virtual void Play3D(Transform transform, string cueName, float volume, bool isLoop)
         {
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             if (tempAcb == null)
@@ -70,7 +70,7 @@ namespace HikanyanLaboratory.Audio
             player.Set3dSource(source);
             player.Set3dListener(_listener.nativeListener);
             player.SetCue(tempAcb, cueName);
-            player.SetVolume(volume * _volume * _masterVolume);
+            player.SetVolume(volume * _volume * MasterVolume);
             player.Loop(isLoop);
             newAtomPlayer.Playback = player.Start();
 
