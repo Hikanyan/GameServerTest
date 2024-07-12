@@ -4,6 +4,7 @@ using CriWare;
 using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -19,6 +20,12 @@ namespace HikanyanLaboratory.Audio
         private CriAtomListener _listener; // リスナー
         protected override bool UseDontDestroyOnLoad => true;
         public CriAudioType CriAudioType { get; set; }
+        
+        [Inject]
+        private void Construct(CriAudioSetting audioSetting)
+        {
+            _audioSetting = audioSetting;
+        }
 
         private void Awake()
         {
@@ -60,7 +67,7 @@ namespace HikanyanLaboratory.Audio
                 {
                     _audioPlayers.Add(CriAudioType.Other, new OtherPlayer(cueSheet.CueSheetName, _listener));
                 }
-                
+
                 // 他のCriAudioTypeも同様に追加可能
             }
 
@@ -95,7 +102,8 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                return new Player(player, cueName);
+                Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
+                return new Player(player, cueName).Play();
             }
             else
             {
@@ -108,7 +116,7 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                return new Player(player, cueName); // Adjust the Player class for 3D if needed
+                return new Player(player, cueName).Play3D(gameObject);
             }
             else
             {

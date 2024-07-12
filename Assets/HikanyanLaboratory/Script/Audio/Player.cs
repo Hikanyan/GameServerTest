@@ -28,14 +28,16 @@ namespace HikanyanLaboratory.Audio
             return this;
         }
 
-        public void Play()
+        public Player Play()
         {
             _playerService.Play(_cueName, _volume, _isLoop);
+            return this;
         }
 
-        public void Play3D(GameObject gameObject)
+        public Player Play3D(GameObject gameObject)
         {
             _playerService.Play3D(gameObject, _cueName, _volume, _isLoop);
+            return this;
         }
     }
 }

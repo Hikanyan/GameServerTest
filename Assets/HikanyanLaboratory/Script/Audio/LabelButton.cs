@@ -42,7 +42,6 @@ namespace HikanyanLaboratory.Audio
         public void Play()
         {
             _cueName = _cueNameControl.GetCueName();
-            UnityEngine.Debug.Log(_cueName);
             if (!string.IsNullOrEmpty(_cueName))
             {
                 _criAudioManager.Play(_audioType, _cueName);
