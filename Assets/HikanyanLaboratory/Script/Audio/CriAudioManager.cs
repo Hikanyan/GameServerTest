@@ -180,6 +180,16 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        public List<ICriAudioPlayerService> GetPlayers(CriAudioType type)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                return new List<ICriAudioPlayerService> { player };
+            }
+
+            return new List<ICriAudioPlayerService>();
+        }
+
         private void Unload(Scene scene)
         {
             foreach (var player in _audioPlayers.Values)
