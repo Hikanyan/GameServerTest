@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CriWare;
+using UnityEditor;
 using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
@@ -10,6 +12,7 @@ namespace HikanyanLaboratory.Audio
     {
         private CriAudioSetting _audioSetting;
         private HashSet<string> _enumEntries;
+        private CriAtomExAcb previewAcb = null;
 
         public void SetCriAudioSetting(CriAudioSetting audioSetting)
         {
@@ -30,24 +33,40 @@ namespace HikanyanLaboratory.Audio
                 return;
             }
 
+            InitializeCri();
             string path = Application.streamingAssetsPath + $"/{_audioSetting.StreamingAssetsPathAcf}.acf";
             _enumEntries = new HashSet<string>();
             CriAtomEx.RegisterAcf(null, path);
+        }
+
+        private static void InitializeCri()
+        {
+            Debug.Log("Initializing CRI in Editor...");
+            if (!CriAtomPlugin.IsLibraryInitialized())
+            {
+                CriAtomPlugin.InitializeLibrary();
+                Debug.Log("CRI Initialized in Editor.");
+            }
+        }
+
+        private static void FinalizeCri()
+        {
+            Debug.Log("Finalizing CRI...");
+            CriAtomPlugin.FinalizeLibrary();
+            Debug.Log("CRI Finalized.");
         }
 
         public void SearchCueSheet()
         {
             if (_audioSetting == null)
             {
-                UnityEngine.Debug.LogError("CriAudioSetting が設定されていません。\n" +
-                                           "CriAudioSetting を設定してから呼び出してください。");
+                Debug.LogError("CriAudioSetting が設定されていません。\nCriAudioSetting を設定してから呼び出してください。");
                 return;
             }
 
             if (_audioSetting.AudioCueSheet == null)
             {
-                UnityEngine.Debug.LogError("AudioCueSheet が null です。\n" +
-                                           "AudioCueSheet を初期化してから呼び出してください。");
+                Debug.LogError("AudioCueSheet が null です。\nAudioCueSheet を初期化してから呼び出してください。");
                 return;
             }
 
@@ -61,7 +80,7 @@ namespace HikanyanLaboratory.Audio
             }
             else
             {
-                UnityEngine.Debug.LogError("No ACF file found in StreamingAssets.");
+                Debug.LogError("No ACF file found in StreamingAssets.");
                 return;
             }
 
@@ -84,25 +103,89 @@ namespace HikanyanLaboratory.Audio
                 if (acb != null)
                 {
                     string cueSheetName = Path.GetFileNameWithoutExtension(acbPath);
-                    string acbName = Path.GetFileNameWithoutExtension(acbPath);
-                    string awbName = Path.GetFileNameWithoutExtension(awbPath);
+                    if (!Enum.TryParse(cueSheetName, out CriAudioType cueSheetType))
+                    {
+                        cueSheetType = CriAudioType.Other;
+                    }
+
                     var audioCueSheet = new AudioCueSheet<string>
                     {
                         Type = cueSheetName,
                         CueSheetName = cueSheetName,
-                        AcbPath = acbName,
-                        AwbPath = awbName
+                        AcbPath = acbPath,
+                        AwbPath = awbPath
                     };
                     _audioSetting.AudioCueSheet.Add(audioCueSheet);
                     _enumEntries.Add(cueSheetName);
+
+                    // キューシートからすべてのキュー名を取得して追加
+                    List<string> cueNames = GetAllCueNames(cueSheetName);
+                    _audioSetting.AddCueSheet(cueSheetType, cueNames);
+
                     acb.Dispose();
                 }
             }
+
+            FinalizeCri();
         }
 
         /// <summary>
-        /// Enumファイルを生成
+        /// キューシートを検索し、曲の名前を取得します。
         /// </summary>
+        /// <param name="cueSheetName"></param>
+        /// <returns></returns>
+        private List<string> GetAllCueNames(string cueSheetName)
+        {
+            List<string> cueNames = new List<string>();
+            var acb = CriAtom.GetCueSheet(cueSheetName).acb;
+            if (acb != null)
+            {
+                CriAtomEx.CueInfo[] cueInfos = acb.GetCueInfoList();
+                foreach (var cueInfo in cueInfos)
+                {
+                    cueNames.Add(cueInfo.name);
+                }
+            }
+
+            return cueNames;
+        }
+
+        /// <summary>
+        /// これは、既存のCriAudioType.csファイルを読み込み、既存のエントリをHashSetにロードします。
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private HashSet<string> LoadExistingEnumEntries(string filePath)
+        {
+            var existingEntries = new HashSet<string>();
+
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    if (line.Trim().StartsWith("{") || line.Trim().StartsWith("namespace") ||
+                        line.Trim().StartsWith("public enum CriAudioType"))
+                    {
+                        continue;
+                    }
+
+                    if (line.Trim().StartsWith("}"))
+                    {
+                        break;
+                    }
+
+                    var entry = line.Trim().TrimEnd(',').Trim();
+                    if (!string.IsNullOrEmpty(entry) && entry != "Master" && entry != "Other")
+                    {
+                        existingEntries.Add(entry);
+                    }
+                }
+            }
+
+            return existingEntries;
+        }
+
         public void GenerateEnumFile()
         {
             string directoryPath = Path.Combine(Application.dataPath, "HikanyanLaboratory/Script/Audio");
@@ -112,6 +195,9 @@ namespace HikanyanLaboratory.Audio
             }
 
             string filePath = Path.Combine(directoryPath, "CriAudioType.cs");
+            var existingEntries = LoadExistingEnumEntries(filePath);
+
+            _enumEntries.UnionWith(existingEntries);
 
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
@@ -119,9 +205,8 @@ namespace HikanyanLaboratory.Audio
             }
 
             UnityEngine.Debug.Log(
-                $"CriAudioType.cs has been generated at {filePath}. Please recompile the project.");
+                $"GeneratedCriAudioTypeEnum.cs has been generated at {filePath}. Please recompile the project.");
         }
-
 
         private string CriAudioTypeFile()
         {
@@ -132,9 +217,9 @@ namespace HikanyanLaboratory.Audio
                 "    {\n" +
                 "        Master,";
 
-            foreach (var cueSheet in _audioSetting.AudioCueSheet)
+            foreach (var entry in _enumEntries)
             {
-                text += $"\n        {cueSheet.CueSheetName},";
+                text += $"\n        {entry},";
             }
 
             text += "\n        Other\n" +

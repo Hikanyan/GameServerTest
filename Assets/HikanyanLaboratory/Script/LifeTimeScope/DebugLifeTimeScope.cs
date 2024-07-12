@@ -1,4 +1,4 @@
-﻿using HikanyanLaboratory.Debug;
+﻿using HikanyanLaboratory.DebugMode;
 using VContainer;
 using VContainer.Unity;
 

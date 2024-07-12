@@ -16,17 +16,7 @@ MonoBehaviour:
   _audioCueSheet:
   - Type: CueSheet_BGM
     CueSheetName: CueSheet_BGM
-    AcbPath: CueSheet_BGM
+    AcbPath: D:/HikanyanProduction/Unity/GameServerTest/Assets/StreamingAssets/CueSheet_BGM.acb
     AwbPath: 
-  - Type: CueSheet_ME
-    CueSheetName: CueSheet_ME
-    AcbPath: CueSheet_ME
-    AwbPath: 
-  - Type: CueSheet_SE
-    CueSheetName: CueSheet_SE
-    AcbPath: CueSheet_SE
-    AwbPath: 
-  - Type: CueSheet_Voice
-    CueSheetName: CueSheet_Voice
-    AcbPath: CueSheet_Voice
-    AwbPath: 
+  _cueSheetDictionary:
+    _pairs: []

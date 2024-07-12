@@ -4,7 +4,7 @@ using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HikanyanLaboratory.Debug
+namespace HikanyanLaboratory.DebugMode
 {
     public class DebugClass : AbstractSingletonMonoBehaviour<DebugClass>
     {
