@@ -8,6 +8,9 @@ using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
+    /// <summary>
+    /// Audioの再生を管理するクラス
+    /// </summary>
     public class CriAudioManager : AbstractSingletonMonoBehaviour<CriAudioManager>
     {
         [SerializeField] private CriAudioSetting _audioSetting;
@@ -46,7 +49,7 @@ namespace HikanyanLaboratory.Audio
             foreach (var cueSheet in _audioSetting.AudioCueSheet)
             {
                 CriAtom.AddCueSheet(cueSheet.CueSheetName, $"{cueSheet.AcbPath}.acb",
-                    cueSheet.AwbPath != "" ? $"{cueSheet.AwbPath}.awb" : null, null);
+                    !string.IsNullOrEmpty(cueSheet.AwbPath) ? $"{cueSheet.AwbPath}.awb" : null, null);
                 if (cueSheet.CueSheetName == CriAudioType.CueSheet_BGM.ToString())
                 {
                     _audioPlayers.Add(CriAudioType.CueSheet_BGM, new BGMPlayer(cueSheet.CueSheetName, _listener));
@@ -67,7 +70,6 @@ namespace HikanyanLaboratory.Audio
                 {
                     _audioPlayers.Add(CriAudioType.Other, new OtherPlayer(cueSheet.CueSheetName, _listener));
                 }
-
                 // 他のCriAudioTypeも同様に追加可能
             }
 
@@ -131,8 +133,7 @@ namespace HikanyanLaboratory.Audio
             Play3D(transform, type, cueName, 1f, isLoop);
         }
 
-        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f,
-            bool isLoop = false)
+        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
@@ -178,6 +179,22 @@ namespace HikanyanLaboratory.Audio
             else
             {
                 Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+        
+        public void StopAll()
+        {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.StopAll();
+            }
+        }
+        
+        public void PauseAll()
+        {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.PauseAll();
             }
         }
 

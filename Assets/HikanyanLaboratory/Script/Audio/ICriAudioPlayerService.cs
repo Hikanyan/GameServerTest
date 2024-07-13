@@ -12,5 +12,7 @@ namespace HikanyanLaboratory.Audio
         void Pause(string cueName);
         void Resume(string cueName);
         void SetVolume(float volume);
+        void StopAll();
+        void PauseAll();
     }
 }

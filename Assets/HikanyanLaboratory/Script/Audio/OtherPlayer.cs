@@ -1,19 +1,23 @@
 ﻿using CriWare;
-using NotImplementedException = System.NotImplementedException;
+using UniRx;
 
 namespace HikanyanLaboratory.Audio
 {
     public class OtherPlayer : CriAudioPlayerService
     {
-        private CriPlayerData? _currentOther;
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+
         public OtherPlayer(string cueSheetName, CriAtomListener listener)
             : base(cueSheetName, listener)
         {
+            Observable.EveryUpdate()
+                .Subscribe(_ => CheckPlayerStatus())
+                .AddTo(_disposables);
         }
 
-        protected override void OnPlayerCreated(CriPlayerData playerData)
+        ~OtherPlayer()
         {
-            _currentOther = playerData;
+            _disposables.Dispose();
         }
     }
 }

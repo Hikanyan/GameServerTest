@@ -1,38 +1,39 @@
-﻿using CriWare;
-using HikanyanLaboratory.Audio;
+﻿using System.Collections.Generic;
+using CriWare;
+using UniRx;
+using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
 {
     public class BGMPlayer : CriAudioPlayerService
     {
-        private CriPlayerData? _currentBGM;
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
         public BGMPlayer(string cueSheetName, CriAtomListener listener)
             : base(cueSheetName, listener)
         {
+            Observable.EveryUpdate()
+                .Subscribe(_ => CheckPlayerStatus())
+                .AddTo(_disposables);
         }
 
-        public override void Play(string cueName, float volume, bool isLoop)
+        protected override void PrePlayCheck(string cueName)
         {
-            // 既存のBGMを停止する
+            // BGM 再生時には既存の BGM を止める
             StopAllBGM();
-            // 新しいBGMを再生する
-            base.Play(cueName, volume, isLoop);
         }
 
         private void StopAllBGM()
         {
-            if (_currentBGM.HasValue && _currentBGM.Value.Playback.GetStatus() == CriAtomExPlayback.Status.Playing)
+            foreach (var cue in _playbacks.Keys)//_playbacks.Keysは再生中の音声の名前
             {
-                _currentBGM.Value.Player.Stop();
-                _currentBGM.Value.Player.Dispose();
-                _currentBGM = null;
+                Stop(cue);
             }
         }
 
-        protected override void OnPlayerCreated(CriPlayerData playerData)
+        ~BGMPlayer()
         {
-            _currentBGM = playerData;
+            _disposables.Dispose();
         }
     }
 }
