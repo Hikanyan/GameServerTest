@@ -39,11 +39,6 @@ namespace HikanyanLaboratory.Audio
             var tempAcb = CriAtom.GetCueSheet(_cueSheetName).acb;
             tempAcb.GetCueInfo(cueName, out var cueInfo);
 
-            // 既に再生中の場合は再生しない
-            if (_playbacks.ContainsKey(cueName) && _playbacks[cueName].GetStatus() == CriAtomExPlayback.Status.Playing)
-            {
-                return;
-            }
 
             PrePlayCheck(cueName);
             _criAtomExPlayer.SetCue(tempAcb, cueName);
