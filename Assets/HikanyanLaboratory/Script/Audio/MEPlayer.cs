@@ -1,4 +1,5 @@
-﻿using CriWare;
+﻿using System.Collections.Generic;
+using CriWare;
 using UniRx;
 using UnityEngine;
 
@@ -30,7 +31,8 @@ namespace HikanyanLaboratory.Audio
 
         private void StopAllME()
         {
-            foreach (var cue in _playbacks.Keys) //_playbacks.Keysは再生中の音声の名前
+            var cuesToStop = new List<string>(_playbacks.Keys);
+            foreach (var cue in cuesToStop)
             {
                 Stop(cue);
             }
