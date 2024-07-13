@@ -121,7 +121,13 @@ namespace HikanyanLaboratory.Audio
                 playback.Pause();
             }
         }
-
+        public void ResumeAll()
+        {
+            foreach (var playback in _playbacks.Values)
+            {
+                playback.Resume(CriAtomEx.ResumeMode.PausedPlayback);
+            }
+        }
         public void SetVolume(float volume)
         {
             _volume = volume;

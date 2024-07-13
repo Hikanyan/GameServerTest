@@ -197,7 +197,13 @@ namespace HikanyanLaboratory.Audio
                 player.PauseAll();
             }
         }
-
+        public void ResumeAll()
+        {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.ResumeAll();
+            }
+        }
         public List<ICriAudioPlayerService> GetPlayers(CriAudioType type)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
