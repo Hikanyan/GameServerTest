@@ -23,4 +23,8 @@ MonoBehaviour:
     AcbPath: CueSheet_SE
     AwbPath: 
   _cueSheetDictionary:
-    _pairs: []
+    _pairs:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
