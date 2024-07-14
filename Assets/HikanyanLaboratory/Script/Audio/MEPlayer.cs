@@ -1,4 +1,5 @@
-﻿using CriWare;
+﻿using System.Collections.Generic;
+using CriWare;
 using UniRx;
 using UnityEngine;
 
@@ -18,13 +19,20 @@ namespace HikanyanLaboratory.Audio
 
         protected override void PrePlayCheck(string cueName)
         {
+            // 既に再生中の場合は再生しない
+            if (_playbacks.ContainsKey(cueName) && _playbacks[cueName].GetStatus() == CriAtomExPlayback.Status.Playing)
+            {
+                return;
+            }
+
             // BGM 再生時には既存の BGM を止める
             StopAllME();
         }
 
         private void StopAllME()
         {
-            foreach (var cue in _playbacks.Keys)//_playbacks.Keysは再生中の音声の名前
+            var cuesToStop = new List<string>(_playbacks.Keys);
+            foreach (var cue in cuesToStop)
             {
                 Stop(cue);
             }
