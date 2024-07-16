@@ -6,9 +6,9 @@ namespace HikanyanLaboratory.System
 {
     public class ManagerSceneController
     {
-        private Scene _currentScene;
+        private Scene _lastScene;
         private readonly SceneLoader _sceneLoader;
-        private readonly string _managerScene = "ManagerScene";
+        private readonly Scene _neverUnloadScene;
 
         /// <summary>
         /// 最初にManagerSceneを読み込む
@@ -18,6 +18,9 @@ namespace HikanyanLaboratory.System
         public ManagerSceneController(SceneLoader sceneLoader)
         {
             _sceneLoader = sceneLoader;
+            // 現在のSceneを取得
+            _neverUnloadScene = SceneManager.GetActiveScene();
+            _lastScene = _neverUnloadScene;
             LoadManagerScene().Forget();
         }
 
@@ -25,11 +28,20 @@ namespace HikanyanLaboratory.System
         /// 現在のシーンをUnloadしてから新しいシーンをLoadする
         /// </summary>
         /// <param name="sceneName"> 新しいシーンの名前 </param>
-        public async UniTaskVoid ChangeScene(string sceneName)
+        public async UniTask ChangeScene(string sceneName)
         {
             await CurrentSceneUnload();
             await _sceneLoader.LoadSceneAsync(sceneName);
-            _currentScene.name = sceneName;
+
+            // シーンのロード完了を待つ
+            Scene loadedScene = SceneManager.GetSceneByName(sceneName);
+            while (!loadedScene.isLoaded)
+            {
+                await UniTask.Yield();
+            }
+
+            SceneManager.SetActiveScene(loadedScene);
+            _lastScene = loadedScene;
         }
 
         /// <summary>
@@ -37,9 +49,7 @@ namespace HikanyanLaboratory.System
         /// </summary>
         public async UniTaskVoid LoadTitleScene()
         {
-            await CurrentSceneUnload();
-            await _sceneLoader.LoadSceneAsync("TitleScene");
-            _currentScene.name = "TitleScene";
+            await ChangeScene("TitleScene");
         }
 
         /// <summary>
@@ -47,9 +57,7 @@ namespace HikanyanLaboratory.System
         /// </summary>
         public async UniTaskVoid LoadGameScene()
         {
-            await CurrentSceneUnload();
-            await _sceneLoader.LoadSceneAsync("InGameScene");
-            _currentScene.name = "InGameScene";
+            await ChangeScene("InGameScene");
         }
 
         /// <summary>
@@ -57,9 +65,7 @@ namespace HikanyanLaboratory.System
         /// </summary>
         public async UniTaskVoid LoadResultScene()
         {
-            await CurrentSceneUnload();
-            await _sceneLoader.LoadSceneAsync("ResultScene");
-            _currentScene.name = "ResultScene";
+            await ChangeScene("ResultScene");
         }
 
         /// <summary>
@@ -67,9 +73,7 @@ namespace HikanyanLaboratory.System
         /// </summary>
         public async UniTaskVoid LoadLobbyScene()
         {
-            await CurrentSceneUnload();
-            await _sceneLoader.LoadSceneAsync("LobbyScene");
-            _currentScene.name = "LobbyScene";
+            await ChangeScene("LobbyScene");
         }
 
         /// <summary>
@@ -77,15 +81,18 @@ namespace HikanyanLaboratory.System
         /// </summary>
         private async UniTaskVoid LoadManagerScene()
         {
-            await _sceneLoader.LoadSceneAsync(_managerScene);
+            await _sceneLoader.LoadSceneAsync(_neverUnloadScene.name, LoadSceneMode.Additive);
         }
 
         /// <summary>
-        ///　現在のシーンをUnloadする
+        /// 現在のシーンをUnloadする
         /// </summary>
         private async UniTask CurrentSceneUnload()
         {
-            await _sceneLoader.UnloadSceneAsync(_currentScene.name);
+            if (_lastScene != _neverUnloadScene)
+            {
+                await _sceneLoader.UnloadSceneAsync(_lastScene.name);
+            }
         }
     }
 }
