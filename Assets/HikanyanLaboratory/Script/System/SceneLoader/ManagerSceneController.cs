@@ -8,6 +8,7 @@ namespace HikanyanLaboratory.System
     {
         private readonly SceneLoader _sceneLoader;
         private readonly Scene _currentScene;
+        private readonly Scene _nextScene;
 
         [Inject]
         public ManagerSceneController(SceneLoader sceneLoader)
@@ -39,6 +40,11 @@ namespace HikanyanLaboratory.System
             await _sceneLoader.LoadSceneAsync("ResultScene");
         }
 
+        public async UniTaskVoid LoadManagerScene()
+        {
+            
+            await _sceneLoader.LoadSceneAsync("ManagerScene");
+        }
 
         private async UniTask CurrentSceneUnload()
         {
