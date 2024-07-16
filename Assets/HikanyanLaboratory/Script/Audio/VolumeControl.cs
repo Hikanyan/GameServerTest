@@ -17,6 +17,8 @@ namespace HikanyanLaboratory.Audio
         {
             base.Initialize(label, initialValue);
 
+            _volumeText.text = label;
+            
             _volumeSlider.minValue = 0;
             _volumeSlider.maxValue = 100;
             _volumeSlider.value = initialValue * 100;
