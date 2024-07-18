@@ -1551,6 +1551,7 @@ GameObject:
   - component: {fileID: 7409169382040555034}
   - component: {fileID: 4981516883093846139}
   - component: {fileID: 8836261166133351205}
+  - component: {fileID: 1863200478464832403}
   m_Layer: 0
   m_Name: OptionCanvasRoot
   m_TagString: Untagged
@@ -1642,6 +1643,18 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!114 &1863200478464832403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430599752001537799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d9f245b41f94d1eb5401dd48ed7609e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2591028418089477737
 GameObject:
   m_ObjectHideFlags: 0
@@ -3233,7 +3246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 40d60f1a3aae894428149eb2dbde0989, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 66efb24ed46044ab8a039599cbc47d7b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
