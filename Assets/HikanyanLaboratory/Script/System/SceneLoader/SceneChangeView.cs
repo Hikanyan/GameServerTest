@@ -3,10 +3,11 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace HikanyanLaboratory.System
 {
-    public class LoadingSceneView
+    public class SceneChangeView : MonoBehaviour
     {
         [SerializeField] private GameObject _loadingUI;
         [SerializeField] private Material _fadeMaterial;
@@ -14,8 +15,17 @@ namespace HikanyanLaboratory.System
         [SerializeField, Range(0, 1)] private float _cutoutRange;
         [SerializeField] private Slider _slider;
         [SerializeField] private float _fadeDuration = 1.0f;
+        [SerializeField] private Ease fadeEase = Ease.Linear; // Easeタイプを公開
+
+        [SerializeReference, SubclassSelector] private IFadeStrategy _fadeStrategy; // フェードを設定
+
         private static readonly int MaskTex = Shader.PropertyToID("_MaskTex");
-        private static readonly int Range1 = Shader.PropertyToID("_Range");
+
+        [Inject]
+        public void Construct(IFadeStrategy fadeStrategy)
+        {
+            _fadeStrategy = fadeStrategy;
+        }
 
         private void Start()
         {
@@ -29,18 +39,18 @@ namespace HikanyanLaboratory.System
 
         public async UniTask FadeOut()
         {
-            DOTween.To(() => _cutoutRange, x => _cutoutRange = x, 1, _fadeDuration)
-                .OnUpdate(() => _fadeMaterial.SetFloat(Range1, 1 - _cutoutRange))
-                .SetEase(Ease.Linear);
-            await UniTask.Delay(TimeSpan.FromSeconds(_fadeDuration));
+            if (_fadeStrategy != null)
+            {
+                await _fadeStrategy.FadeOut(_fadeMaterial, _fadeDuration, _cutoutRange, fadeEase);
+            }
         }
 
         public async UniTask FadeIn()
         {
-            DOTween.To(() => _cutoutRange, x => _cutoutRange = x, 0, _fadeDuration)
-                .OnUpdate(() => _fadeMaterial.SetFloat(Range1, 1 - _cutoutRange))
-                .SetEase(Ease.Linear);
-            await UniTask.Delay(TimeSpan.FromSeconds(_fadeDuration));
+            if (_fadeStrategy != null)
+            {
+                await _fadeStrategy.FadeIn(_fadeMaterial, _fadeDuration, _cutoutRange, fadeEase);
+            }
         }
 
         public void UpdateProgress(float progress)

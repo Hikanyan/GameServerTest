@@ -22,6 +22,8 @@ namespace HikanyanLaboratory.LifeTimeScope
             builder.Register<SceneLoader>(Lifetime.Singleton);
             builder.Register<ManagerSceneController>(Lifetime.Singleton);
             
+            builder.RegisterEntryPoint<SceneChangeView>();
+            
             builder.RegisterEntryPoint<ManagerPresenter>().WithParameter("isDebugMode", _isDebugMode);
         }
     }
