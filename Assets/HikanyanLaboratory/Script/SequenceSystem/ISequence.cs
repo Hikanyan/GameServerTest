@@ -2,7 +2,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace HikanyanLaboratory.Script.SequenceSystem
+namespace HikanyanLaboratory.SequenceSystem
 {
     public interface ISequence
     {

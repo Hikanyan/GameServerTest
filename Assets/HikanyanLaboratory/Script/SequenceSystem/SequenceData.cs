@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HikanyanLaboratory.Script.SequenceSystem
+namespace HikanyanLaboratory.SequenceSystem
 {
     public class SequenceData
     {
