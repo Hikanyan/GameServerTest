@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace HikanyanLaboratory.System
 {
-    public class LoadingSceneView
+    public class SceneChangeView : MonoBehaviour
     {
         [SerializeField] private GameObject _loadingUI;
         [SerializeField] private Material _fadeMaterial;
