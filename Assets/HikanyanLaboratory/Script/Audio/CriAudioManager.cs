@@ -70,6 +70,7 @@ namespace HikanyanLaboratory.Audio
                 foreach (var player in _audioPlayers.Values)
                 {
                     player.Volume.Value = volume;
+                    Debug.Log($"MasterVolume: {volume}");
                 }
             }).AddTo(this);
             SceneManager.sceneUnloaded += Unload;

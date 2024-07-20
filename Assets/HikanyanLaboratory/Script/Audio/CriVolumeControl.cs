@@ -1,12 +1,13 @@
 ﻿using System.Globalization;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace HikanyanLaboratory.Audio
 {
-    public class VolumeControl : MonoBehaviour, IVolumeBase
+    public class CriVolumeControl : MonoBehaviour, ICriVolume
     {
         [SerializeField] private TextMeshProUGUI _volumeText;
         [SerializeField] private Slider _volumeSlider;
@@ -16,8 +17,10 @@ namespace HikanyanLaboratory.Audio
         private float _currentValue;
         private CriAudioManager _criAudioManager; // CriAudioManagerのインスタンスを保持
         private CriAudioType _audioType; // 音声タイプを保持
+        public IReactiveProperty<float> Volume { get; } = new ReactiveProperty<float>(1f);
 
-        public void Initialize(string label, float initialValue, CriAudioType audioType, UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
+        public void Initialize(string label, float initialValue, CriAudioType audioType,
+            UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
             _label = label;
             _currentValue = initialValue;
@@ -35,6 +38,8 @@ namespace HikanyanLaboratory.Audio
             _volumeInputField.text = (initialValue * 100).ToString(CultureInfo.CurrentCulture);
             _volumeInputField.onEndEdit.AddListener(onInputChanged);
             _volumeInputField.onEndEdit.AddListener(OnInputChanged);
+
+            Volume.Subscribe(SetVolume).AddTo(this);
         }
 
         public void Initialize(string label, float initialValue)
@@ -51,13 +56,15 @@ namespace HikanyanLaboratory.Audio
 
             _volumeInputField.text = (initialValue * 100).ToString(CultureInfo.CurrentCulture);
             _volumeInputField.onEndEdit.AddListener(OnInputChanged);
+
+            Volume.Subscribe(SetVolume).AddTo(this);
         }
 
-        public void SetValue(float value)
+        public void SetVolume(float volume)
         {
-            _currentValue = value;
-            _volumeSlider.value = value * 100;
-            _volumeInputField.text = (value * 100).ToString(CultureInfo.CurrentCulture);
+            _currentValue = volume;
+            _volumeSlider.value = volume * 100;
+            _volumeInputField.text = (volume * 100).ToString(CultureInfo.CurrentCulture);
         }
 
         private void OnSliderChanged(float value)
@@ -65,6 +72,7 @@ namespace HikanyanLaboratory.Audio
             _currentValue = value / 100;
             _volumeInputField.text = value.ToString(CultureInfo.CurrentCulture);
             _criAudioManager?.SetVolume(_audioType, _currentValue);
+            Volume.Value = _currentValue;
         }
 
         private void OnInputChanged(string value)
@@ -74,6 +82,7 @@ namespace HikanyanLaboratory.Audio
                 _currentValue = result / 100;
                 _volumeSlider.value = result;
                 _criAudioManager?.SetVolume(_audioType, _currentValue);
+                Volume.Value = _currentValue;
             }
         }
     }

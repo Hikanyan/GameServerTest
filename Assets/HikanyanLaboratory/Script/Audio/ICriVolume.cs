@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
 {
-    public interface IVolumeBase
+    public interface ICriVolume
     {
-        void Initialize(string label, float initialValue);
-        void SetValue(float value);
+        IReactiveProperty<float> Volume { get; }
+        void SetVolume(float volume);
     }
 }

@@ -20,11 +20,11 @@ namespace HikanyanLaboratory.Audio
 
         private CriAudioManager _criAudioManager;
 
-        private VolumeControl _masterVolumeControl;
-        private VolumeControl _bgmVolumeControl;
-        private VolumeControl _seVolumeControl;
-        private VolumeControl _meVolumeControl;
-        private VolumeControl _voiceVolumeControl;
+        private CriVolumeControl _masterCriVolumeControl;
+        private CriVolumeControl _bgmCriVolumeControl;
+        private CriVolumeControl _seCriVolumeControl;
+        private CriVolumeControl _meCriVolumeControl;
+        private CriVolumeControl _voiceCriVolumeControl;
 
         private CueNameControl _bgmCueNameControl;
         private CueNameControl _seCueNameControl;
@@ -35,22 +35,20 @@ namespace HikanyanLaboratory.Audio
         {
             _criAudioManager = CriAudioManager.Instance;
 
-
-            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume.Value,
+            _masterCriVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume.Value,
                 CriAudioType.Master, OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
-            _bgmVolumeControl = CreateVolumeControl("BGM Volume",
+            _bgmCriVolumeControl = CreateVolumeControl("BGM Volume",
                 _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_BGM), CriAudioType.CueSheet_BGM,
                 OnBgmVolumeSliderChanged, OnBgmVolumeInputChanged);
-            _seVolumeControl = CreateVolumeControl("SE Volume",
+            _seCriVolumeControl = CreateVolumeControl("SE Volume",
                 _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_SE), CriAudioType.CueSheet_SE,
                 OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
-            _meVolumeControl = CreateVolumeControl("ME Volume",
+            _meCriVolumeControl = CreateVolumeControl("ME Volume",
                 _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_ME), CriAudioType.CueSheet_ME,
                 OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
-            _voiceVolumeControl = CreateVolumeControl("Voice Volume",
+            _voiceCriVolumeControl = CreateVolumeControl("Voice Volume",
                 _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_Voice), CriAudioType.CueSheet_Voice,
                 OnVoiceVolumeSliderChanged, OnVoiceVolumeInputChanged);
-
 
             _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
             _seCueNameControl = CreateCueNameControl("SE Cue Name");
@@ -74,11 +72,11 @@ namespace HikanyanLaboratory.Audio
             return cueNameControl;
         }
 
-        private VolumeControl CreateVolumeControl(string label, float initialValue, CriAudioType audioType,
+        private CriVolumeControl CreateVolumeControl(string label, float initialValue, CriAudioType audioType,
             UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
             var volumeControlObject = Instantiate(_volumeControlPrefab, _volumeControlsParent);
-            var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
+            var volumeControl = volumeControlObject.GetComponent<CriVolumeControl>();
             volumeControl.Initialize(label, initialValue, audioType, onSliderChanged, onInputChanged);
             return volumeControl;
         }
@@ -86,7 +84,6 @@ namespace HikanyanLaboratory.Audio
         private void OnMasterVolumeSliderChanged(float value)
         {
             _criAudioManager.MasterVolume.Value = value / 100;
-            _masterVolumeControl.SetValue(value / 100);
         }
 
         private void OnBgmVolumeSliderChanged(float value)
@@ -95,7 +92,6 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
-                _bgmVolumeControl.SetValue(value / 100);
             }
         }
 
@@ -105,7 +101,6 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
-                _seVolumeControl.SetValue(value / 100);
             }
         }
 
@@ -115,7 +110,6 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
-                _meVolumeControl.SetValue(value / 100);
             }
         }
 
@@ -125,7 +119,6 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
-                _voiceVolumeControl.SetValue(value / 100);
             }
         }
 
@@ -134,7 +127,6 @@ namespace HikanyanLaboratory.Audio
             if (float.TryParse(value, out float floatValue))
             {
                 _criAudioManager.MasterVolume.Value = floatValue / 100;
-                _masterVolumeControl.SetValue(floatValue / 100);
             }
         }
 
@@ -146,7 +138,6 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
-                    _bgmVolumeControl.SetValue(floatValue / 100);
                 }
             }
         }
@@ -159,7 +150,6 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
-                    _seVolumeControl.SetValue(floatValue / 100);
                 }
             }
         }
@@ -172,7 +162,6 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
-                    _meVolumeControl.SetValue(floatValue / 100);
                 }
             }
         }
@@ -185,7 +174,6 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
-                    _voiceVolumeControl.SetValue(floatValue / 100);
                 }
             }
         }
@@ -194,25 +182,28 @@ namespace HikanyanLaboratory.Audio
         {
             _criAudioManager.GetPlayer(CriAudioType.CueSheet_BGM)?.Volume.Subscribe(volume =>
             {
-                _bgmVolumeControl.SetValue(volume);
+                _bgmCriVolumeControl.SetVolume(volume);
             }).AddTo(this);
 
             _criAudioManager.GetPlayer(CriAudioType.CueSheet_SE)?.Volume.Subscribe(volume =>
             {
-                _seVolumeControl.SetValue(volume);
+                _seCriVolumeControl.SetVolume(volume);
             }).AddTo(this);
 
             _criAudioManager.GetPlayer(CriAudioType.CueSheet_ME)?.Volume.Subscribe(volume =>
             {
-                _meVolumeControl.SetValue(volume);
+                _meCriVolumeControl.SetVolume(volume);
             }).AddTo(this);
 
             _criAudioManager.GetPlayer(CriAudioType.CueSheet_Voice)?.Volume.Subscribe(volume =>
             {
-                _voiceVolumeControl.SetValue(volume);
+                _voiceCriVolumeControl.SetVolume(volume);
             }).AddTo(this);
 
-            _criAudioManager.MasterVolume.Subscribe(volume => { _masterVolumeControl.SetValue(volume); }).AddTo(this);
+            _criAudioManager.MasterVolume.Subscribe(volume =>
+            {
+                _masterCriVolumeControl.SetVolume(volume);
+            }).AddTo(this);
         }
     }
 }
