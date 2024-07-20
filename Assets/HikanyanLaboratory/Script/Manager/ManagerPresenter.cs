@@ -1,8 +1,6 @@
 ﻿using HikanyanLaboratory.System;
 using Unity.VisualScripting;
 using UnityEngine;
-using VContainer;
-using NotImplementedException = System.NotImplementedException;
 
 namespace HikanyanLaboratory.Manager
 {
@@ -10,7 +8,6 @@ namespace HikanyanLaboratory.Manager
     {
         private readonly SceneChangePresenter _sceneChangePresenter;
 
-        [Inject]
         public ManagerPresenter(SceneChangePresenter sceneChangePresenter)
         {
             _sceneChangePresenter = sceneChangePresenter;

@@ -2,7 +2,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using VContainer;
 
 namespace HikanyanLaboratory.System
 {
@@ -13,7 +12,6 @@ namespace HikanyanLaboratory.System
         private AsyncOperation _async;
         private Action _onComplete;
 
-        [Inject]
         public SceneChangePresenter(SceneChangeView view, ManagerSceneController managerSceneController)
         {
             _view = view;
