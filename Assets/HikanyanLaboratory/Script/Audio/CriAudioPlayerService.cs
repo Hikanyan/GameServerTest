@@ -141,7 +141,9 @@ namespace HikanyanLaboratory.Audio
         public void SetVolume(float volume)
         {
             _criAtomExPlayer.SetVolume(volume * MasterVolume);
+            _criAtomExPlayer.UpdateAll();
         }
+
         public void Dispose()
         {
             foreach (var playback in _playbacks.Values)
