@@ -15,13 +15,14 @@ namespace HikanyanLaboratory.Audio
         private string _label;
         private float _currentValue;
         private CriAudioManager _criAudioManager; // CriAudioManagerのインスタンスを保持
+        private CriAudioType _audioType; // 音声タイプを保持
 
-        public void Initialize(string label, float initialValue, UnityAction<float> onSliderChanged,
-            UnityAction<string> onInputChanged)
+        public void Initialize(string label, float initialValue, CriAudioType audioType, UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
             _label = label;
             _currentValue = initialValue;
             _criAudioManager = CriAudioManager.Instance;
+            _audioType = audioType;
 
             _volumeText.text = label;
 
@@ -63,7 +64,7 @@ namespace HikanyanLaboratory.Audio
         {
             _currentValue = value / 100;
             _volumeInputField.text = value.ToString(CultureInfo.CurrentCulture);
-            _criAudioManager?.SetVolume(_currentValue);
+            _criAudioManager?.SetVolume(_audioType, _currentValue);
         }
 
         private void OnInputChanged(string value)
@@ -72,7 +73,7 @@ namespace HikanyanLaboratory.Audio
             {
                 _currentValue = result / 100;
                 _volumeSlider.value = result;
-                _criAudioManager?.SetVolume(_currentValue);
+                _criAudioManager?.SetVolume(_audioType, _currentValue);
             }
         }
     }

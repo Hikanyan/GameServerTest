@@ -1,15 +1,11 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace HikanyanLaboratory.Audio
 {
-    /// <summary>
-    /// 各種音声を再生するためのビュー
-    /// </summary>
     public class CirView : MonoBehaviour
     {
         [SerializeField] private GameObject _volumeControlPrefab;
@@ -35,20 +31,26 @@ namespace HikanyanLaboratory.Audio
         private CueNameControl _meCueNameControl;
         private CueNameControl _voiceCueNameControl;
 
-        private float _bgmVolume = 1f;
-        private float _seVolume = 1f;
-        private float _meVolume = 1f;
-        private float _voiceVolume = 1f;
-
         private void Start()
         {
             _criAudioManager = CriAudioManager.Instance;
 
-            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume, _criAudioManager, OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
-            _bgmVolumeControl = CreateVolumeControl("BGM Volume", _bgmVolume, _criAudioManager, OnBgmVolumeSliderChanged, OnBgmVolumeInputChanged);
-            _seVolumeControl = CreateVolumeControl("SE Volume", _seVolume, _criAudioManager, OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
-            _meVolumeControl = CreateVolumeControl("ME Volume", _meVolume, _criAudioManager, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
-            _voiceVolumeControl = CreateVolumeControl("Voice Volume", _voiceVolume, _criAudioManager, OnVoiceVolumeSliderChanged, OnVoiceVolumeInputChanged);
+
+            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume.Value,
+                CriAudioType.Master, OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
+            _bgmVolumeControl = CreateVolumeControl("BGM Volume",
+                _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_BGM), CriAudioType.CueSheet_BGM,
+                OnBgmVolumeSliderChanged, OnBgmVolumeInputChanged);
+            _seVolumeControl = CreateVolumeControl("SE Volume",
+                _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_SE), CriAudioType.CueSheet_SE,
+                OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
+            _meVolumeControl = CreateVolumeControl("ME Volume",
+                _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_ME), CriAudioType.CueSheet_ME,
+                OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
+            _voiceVolumeControl = CreateVolumeControl("Voice Volume",
+                _criAudioManager.GetPlayerVolume(CriAudioType.CueSheet_Voice), CriAudioType.CueSheet_Voice,
+                OnVoiceVolumeSliderChanged, OnVoiceVolumeInputChanged);
+
 
             _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
             _seCueNameControl = CreateCueNameControl("SE Cue Name");
@@ -58,7 +60,10 @@ namespace HikanyanLaboratory.Audio
             _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.CueSheet_BGM, _bgmCueNameControl);
             _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.CueSheet_SE, _seCueNameControl);
             _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.CueSheet_ME, _meCueNameControl);
-            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice, _voiceCueNameControl);
+            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice,
+                _voiceCueNameControl);
+
+            BindVolumeControls();
         }
 
         private CueNameControl CreateCueNameControl(string label)
@@ -69,53 +74,66 @@ namespace HikanyanLaboratory.Audio
             return cueNameControl;
         }
 
-        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
+        private VolumeControl CreateVolumeControl(string label, float initialValue, CriAudioType audioType,
+            UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
             var volumeControlObject = Instantiate(_volumeControlPrefab, _volumeControlsParent);
             var volumeControl = volumeControlObject.GetComponent<VolumeControl>();
-            volumeControl.Initialize(label, initialValue, onSliderChanged, onInputChanged);
+            volumeControl.Initialize(label, initialValue, audioType, onSliderChanged, onInputChanged);
             return volumeControl;
         }
 
         private void OnMasterVolumeSliderChanged(float value)
         {
-            _criAudioManager.MasterVolume = value / 100;
+            _criAudioManager.MasterVolume.Value = value / 100;
             _masterVolumeControl.SetValue(value / 100);
         }
 
         private void OnBgmVolumeSliderChanged(float value)
         {
-            _bgmVolume = value / 100;
-            _bgmVolumeControl.SetValue(value / 100);
-            UpdateBGMVolume();
+            var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_BGM);
+            if (player != null)
+            {
+                player.Volume.Value = value / 100;
+                _bgmVolumeControl.SetValue(value / 100);
+            }
         }
 
         private void OnSeVolumeSliderChanged(float value)
         {
-            _seVolume = value / 100;
-            _seVolumeControl.SetValue(value / 100);
-            UpdateSEVolume();
+            var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_SE);
+            if (player != null)
+            {
+                player.Volume.Value = value / 100;
+                _seVolumeControl.SetValue(value / 100);
+            }
         }
 
         private void OnMeVolumeSliderChanged(float value)
         {
-            _meVolume = value / 100;
-            _meVolumeControl.SetValue(value / 100);
-            UpdateMEVolume();
+            var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_ME);
+            if (player != null)
+            {
+                player.Volume.Value = value / 100;
+                _meVolumeControl.SetValue(value / 100);
+            }
         }
 
         private void OnVoiceVolumeSliderChanged(float value)
         {
-            _voiceVolume = value / 100;
-            _voiceVolumeControl.SetValue(value / 100);
-            UpdateVoiceVolume();
+            var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_Voice);
+            if (player != null)
+            {
+                player.Volume.Value = value / 100;
+                _voiceVolumeControl.SetValue(value / 100);
+            }
         }
 
         private void OnMasterVolumeInputChanged(string value)
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _criAudioManager.MasterVolume = floatValue / 100;
+                _criAudioManager.MasterVolume.Value = floatValue / 100;
                 _masterVolumeControl.SetValue(floatValue / 100);
             }
         }
@@ -124,9 +142,12 @@ namespace HikanyanLaboratory.Audio
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _bgmVolume = floatValue / 100;
-                _bgmVolumeControl.SetValue(floatValue / 100);
-                UpdateBGMVolume();
+                var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_BGM);
+                if (player != null)
+                {
+                    player.Volume.Value = floatValue / 100;
+                    _bgmVolumeControl.SetValue(floatValue / 100);
+                }
             }
         }
 
@@ -134,9 +155,12 @@ namespace HikanyanLaboratory.Audio
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _seVolume = floatValue / 100;
-                _seVolumeControl.SetValue(floatValue / 100);
-                UpdateSEVolume();
+                var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_SE);
+                if (player != null)
+                {
+                    player.Volume.Value = floatValue / 100;
+                    _seVolumeControl.SetValue(floatValue / 100);
+                }
             }
         }
 
@@ -144,9 +168,12 @@ namespace HikanyanLaboratory.Audio
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _meVolume = floatValue / 100;
-                _meVolumeControl.SetValue(floatValue / 100);
-                UpdateMEVolume();
+                var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_ME);
+                if (player != null)
+                {
+                    player.Volume.Value = floatValue / 100;
+                    _meVolumeControl.SetValue(floatValue / 100);
+                }
             }
         }
 
@@ -154,46 +181,38 @@ namespace HikanyanLaboratory.Audio
         {
             if (float.TryParse(value, out float floatValue))
             {
-                _voiceVolume = floatValue / 100;
-                _voiceVolumeControl.SetValue(floatValue / 100);
-                UpdateVoiceVolume();
+                var player = _criAudioManager.GetPlayer(CriAudioType.CueSheet_Voice);
+                if (player != null)
+                {
+                    player.Volume.Value = floatValue / 100;
+                    _voiceVolumeControl.SetValue(floatValue / 100);
+                }
             }
         }
 
-        private void UpdateBGMVolume()
+        private void BindVolumeControls()
         {
-            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_BGM);
-            foreach (var player in players)
+            _criAudioManager.GetPlayer(CriAudioType.CueSheet_BGM)?.Volume.Subscribe(volume =>
             {
-                player.SetVolume(_bgmVolume);
-            }
-        }
+                _bgmVolumeControl.SetValue(volume);
+            }).AddTo(this);
 
-        private void UpdateSEVolume()
-        {
-            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_SE);
-            foreach (var player in players)
+            _criAudioManager.GetPlayer(CriAudioType.CueSheet_SE)?.Volume.Subscribe(volume =>
             {
-                player.SetVolume(_seVolume);
-            }
-        }
+                _seVolumeControl.SetValue(volume);
+            }).AddTo(this);
 
-        private void UpdateMEVolume()
-        {
-            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_ME);
-            foreach (var player in players)
+            _criAudioManager.GetPlayer(CriAudioType.CueSheet_ME)?.Volume.Subscribe(volume =>
             {
-                player.SetVolume(_meVolume);
-            }
-        }
+                _meVolumeControl.SetValue(volume);
+            }).AddTo(this);
 
-        private void UpdateVoiceVolume()
-        {
-            var players = _criAudioManager.GetPlayers(CriAudioType.CueSheet_Voice);
-            foreach (var player in players)
+            _criAudioManager.GetPlayer(CriAudioType.CueSheet_Voice)?.Volume.Subscribe(volume =>
             {
-                player.SetVolume(_voiceVolume);
-            }
+                _voiceVolumeControl.SetValue(volume);
+            }).AddTo(this);
+
+            _criAudioManager.MasterVolume.Subscribe(volume => { _masterVolumeControl.SetValue(volume); }).AddTo(this);
         }
     }
 }

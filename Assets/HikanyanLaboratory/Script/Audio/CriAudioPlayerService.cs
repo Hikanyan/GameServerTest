@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CriWare;
+using UniRx;
 using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
@@ -13,7 +14,7 @@ namespace HikanyanLaboratory.Audio
         private readonly CriAtomListener _criAtomListener; // リスナー
         private readonly string _cueSheetName; // ACBファイルの名前
         private const float MasterVolume = 1f; // マスターボリューム
-        private float _volume = 1f; // ボリューム
+        public IReactiveProperty<float> Volume { get; private set; } = new ReactiveProperty<float>(1f); // ボリューム
 
         public CriAudioPlayerService(string cueSheetName, CriAtomListener criAtomListener)
         {
@@ -22,11 +23,18 @@ namespace HikanyanLaboratory.Audio
             _criAtomExPlayer = new CriAtomExPlayer();
             _criAtomEx3dSource = new CriAtomEx3dSource();
             _playbacks = new Dictionary<Guid, CriAtomExPlayback>();
+
+            Volume.Subscribe(SetVolume);
         }
 
         ~CriAudioPlayerService()
         {
             Dispose();
+        }
+
+        private void SetVolumeInternal(float volume)
+        {
+            _criAtomExPlayer.SetVolume(volume * MasterVolume);
         }
 
         public virtual Guid Play(string cueName, float volume = 1f, bool isLoop = false)
@@ -42,7 +50,7 @@ namespace HikanyanLaboratory.Audio
 
             PrePlayCheck(cueName);
             _criAtomExPlayer.SetCue(tempAcb, cueName);
-            _criAtomExPlayer.SetVolume(volume * _volume * MasterVolume);
+            _criAtomExPlayer.SetVolume(volume * Volume.Value * MasterVolume);
             _criAtomExPlayer.Loop(isLoop);
 
             var playback = _criAtomExPlayer.Start();
@@ -70,7 +78,7 @@ namespace HikanyanLaboratory.Audio
             _criAtomExPlayer.Set3dSource(_criAtomEx3dSource);
             _criAtomExPlayer.Set3dListener(_criAtomListener.nativeListener);
             _criAtomExPlayer.SetCue(tempAcb, cueName);
-            _criAtomExPlayer.SetVolume(volume * _volume * MasterVolume);
+            _criAtomExPlayer.SetVolume(volume * Volume.Value * MasterVolume);
             _criAtomExPlayer.Loop(isLoop);
 
             var playback = _criAtomExPlayer.Start();
@@ -132,10 +140,8 @@ namespace HikanyanLaboratory.Audio
 
         public void SetVolume(float volume)
         {
-            _volume = volume;
-            _criAtomExPlayer.SetVolume(_volume * MasterVolume);
+            _criAtomExPlayer.SetVolume(volume * MasterVolume);
         }
-
         public void Dispose()
         {
             foreach (var playback in _playbacks.Values)

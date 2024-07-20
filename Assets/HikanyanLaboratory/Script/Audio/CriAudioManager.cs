@@ -11,14 +11,14 @@ namespace HikanyanLaboratory.Audio
     public class CriAudioManager : AbstractSingletonMonoBehaviour<CriAudioManager>
     {
         [SerializeField] private CriAudioSetting _audioSetting;
-        private float _masterVolume = 1F; // マスターボリューム
         private const float Diff = 0.01F; // 音量の変更があったかどうかの判定に使う
 
-        private readonly ISubject<float> _masterVolumeChanged = new Subject<float>(); // マスターボリューム変更時のイベント
         private Dictionary<CriAudioType, ICriAudioPlayerService> _audioPlayers; // 各音声の再生を管理するクラス
 
         private CriAtomListener _listener; // リスナー
         protected override bool UseDontDestroyOnLoad => true;
+
+        public IReactiveProperty<float> MasterVolume { get; private set; } = new ReactiveProperty<float>(1f);
 
         private void Awake()
         {
@@ -64,14 +64,14 @@ namespace HikanyanLaboratory.Audio
                 // 他のCriAudioTypeも同様に追加可能
             }
 
-            _masterVolumeChanged.Subscribe(volume =>
+            // MasterVolumeの変更を監視して、各Playerに反映
+            MasterVolume.Subscribe(volume =>
             {
                 foreach (var player in _audioPlayers.Values)
                 {
-                    player.SetVolume(volume);
+                    player.Volume.Value = volume;
                 }
             }).AddTo(this);
-
             SceneManager.sceneUnloaded += Unload;
         }
 
@@ -80,23 +80,6 @@ namespace HikanyanLaboratory.Audio
             SceneManager.sceneUnloaded -= Unload;
         }
 
-        public float MasterVolume
-        {
-            get => _masterVolume;
-            set
-            {
-                if (Math.Abs(_masterVolume - value) < Diff) return;
-                _masterVolumeChanged.OnNext(value);
-                _masterVolume = value;
-            }
-        }
-        public void SetVolume(float volume)
-        {
-            foreach (var player in _audioPlayers.Values)
-            {
-                player.SetVolume(volume);
-            }
-        }
         public Guid Play(CriAudioType type, string cueName)
         {
             return Play(type, cueName, 1f, false);
@@ -181,6 +164,19 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
+        public void SetVolume(CriAudioType type, float volume)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                player.SetVolume(volume);
+            }
+            else
+            {
+                Debug.LogWarning($"Audio type {type} not supported.");
+            }
+        }
+
+
         public void StopAll()
         {
             foreach (var player in _audioPlayers.Values)
@@ -205,14 +201,24 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-        public List<ICriAudioPlayerService> GetPlayers(CriAudioType type)
+        public ICriAudioPlayerService GetPlayer(CriAudioType type)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                return new List<ICriAudioPlayerService> { player };
+                return player;
             }
 
-            return new List<ICriAudioPlayerService>();
+            return null;
+        }
+
+        public float GetPlayerVolume(CriAudioType type)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                return player.Volume.Value;
+            }
+
+            return 1f;
         }
 
         private void Unload(Scene scene)
