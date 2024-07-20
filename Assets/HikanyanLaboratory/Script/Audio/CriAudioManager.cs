@@ -19,6 +19,11 @@ namespace HikanyanLaboratory.Audio
         protected override bool UseDontDestroyOnLoad => true;
 
         public IReactiveProperty<float> MasterVolume { get; private set; } = new ReactiveProperty<float>(1f);
+        public IReactiveProperty<float> BgmVolume { get; private set; } = new ReactiveProperty<float>(1f);
+        public IReactiveProperty<float> SeVolume { get; private set; } = new ReactiveProperty<float>(1f);
+        public IReactiveProperty<float> MeVolume { get; private set; } = new ReactiveProperty<float>(1f);
+        public IReactiveProperty<float> VoiceVolume { get; private set; } = new ReactiveProperty<float>(1f);
+
 
         private void Awake()
         {
@@ -65,14 +70,31 @@ namespace HikanyanLaboratory.Audio
             }
 
             // MasterVolumeの変更を監視して、各Playerに反映
-            MasterVolume.Subscribe(volume =>
-            {
-                foreach (var player in _audioPlayers.Values)
-                {
-                    player.Volume.Value = volume;
-                }
-            }).AddTo(this);
+            MasterVolume.Subscribe(OnMasterVolumeChanged).AddTo(this);
+            BgmVolume.Subscribe(volume => OnVolumeChanged(CriAudioType.CueSheet_BGM, volume)).AddTo(this);
+            SeVolume.Subscribe(volume => OnVolumeChanged(CriAudioType.CueSheet_SE, volume)).AddTo(this);
+            MeVolume.Subscribe(volume => OnVolumeChanged(CriAudioType.CueSheet_ME, volume)).AddTo(this);
+            VoiceVolume.Subscribe(volume => OnVolumeChanged(CriAudioType.CueSheet_Voice, volume)).AddTo(this);
+
             SceneManager.sceneUnloaded += Unload;
+        }
+
+        private void OnMasterVolumeChanged(float volume)
+        {
+            // MasterVolumeの変更に伴い、各プレイヤーのボリュームを更新する
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.SetVolume(Math.Min(volume, volume * VoiceVolume.Value));
+            }
+        }
+
+        private void OnVolumeChanged(CriAudioType type, float volume)
+        {
+            if (_audioPlayers.TryGetValue(type, out var player))
+            {
+                // 各プレイヤーのボリュームがMasterVolumeを超えないように制御する
+                player.SetVolume(MasterVolume.Value * volume);
+            }
         }
 
         private void OnDestroy()
@@ -94,8 +116,9 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
-                return player.Play(cueName, volume, isLoop);
+                float adjustedVolume = Math.Min(volume, MasterVolume.Value * volume);
+                Debug.Log($"CriAudioType: {type}, CueName: {cueName}, Volume: {adjustedVolume}");
+                return player.Play(cueName, adjustedVolume, isLoop);
             }
             else
             {
@@ -118,8 +141,9 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
+                float adjustedVolume = Math.Min(volume, MasterVolume.Value * volume);
                 Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
-                return player.Play3D(transform, cueName, volume, isLoop);
+                return player.Play3D(transform, cueName, adjustedVolume, isLoop);
             }
             else
             {
@@ -168,7 +192,8 @@ namespace HikanyanLaboratory.Audio
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.SetVolume(volume);
+                float adjustedVolume = Math.Min(volume, MasterVolume.Value * volume);
+                player.SetVolume(adjustedVolume);
             }
             else
             {
