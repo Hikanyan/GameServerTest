@@ -84,6 +84,7 @@ namespace HikanyanLaboratory.Audio
         private void OnMasterVolumeSliderChanged(float value)
         {
             _criAudioManager.MasterVolume.Value = value / 100;
+            _masterCriVolumeControl.SetVolume(value / 100); // スライダーの値を直接反映
         }
 
         private void OnBgmVolumeSliderChanged(float value)
@@ -92,6 +93,7 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
+                _bgmCriVolumeControl.SetVolume(value / 100); // スライダーの値を直接反映
             }
         }
 
@@ -101,6 +103,7 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
+                _seCriVolumeControl.SetVolume(value / 100); // スライダーの値を直接反映
             }
         }
 
@@ -110,6 +113,7 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
+                _meCriVolumeControl.SetVolume(value / 100); // スライダーの値を直接反映
             }
         }
 
@@ -119,6 +123,7 @@ namespace HikanyanLaboratory.Audio
             if (player != null)
             {
                 player.Volume.Value = value / 100;
+                _voiceCriVolumeControl.SetVolume(value / 100); // スライダーの値を直接反映
             }
         }
 
@@ -127,6 +132,7 @@ namespace HikanyanLaboratory.Audio
             if (float.TryParse(value, out float floatValue))
             {
                 _criAudioManager.MasterVolume.Value = floatValue / 100;
+                _masterCriVolumeControl.SetVolume(floatValue / 100); // 入力フィールドの値を直接反映
             }
         }
 
@@ -138,6 +144,7 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
+                    _bgmCriVolumeControl.SetVolume(floatValue / 100); // 入力フィールドの値を直接反映
                 }
             }
         }
@@ -150,6 +157,7 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
+                    _seCriVolumeControl.SetVolume(floatValue / 100); // 入力フィールドの値を直接反映
                 }
             }
         }
@@ -162,6 +170,7 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
+                    _meCriVolumeControl.SetVolume(floatValue / 100); // 入力フィールドの値を直接反映
                 }
             }
         }
@@ -174,6 +183,7 @@ namespace HikanyanLaboratory.Audio
                 if (player != null)
                 {
                     player.Volume.Value = floatValue / 100;
+                    _voiceCriVolumeControl.SetVolume(floatValue / 100); // 入力フィールドの値を直接反映
                 }
             }
         }
@@ -200,10 +210,8 @@ namespace HikanyanLaboratory.Audio
                 _voiceCriVolumeControl.SetVolume(volume);
             }).AddTo(this);
 
-            _criAudioManager.MasterVolume.Subscribe(volume =>
-            {
-                _masterCriVolumeControl.SetVolume(volume);
-            }).AddTo(this);
+            _criAudioManager.MasterVolume.Subscribe(volume => { _masterCriVolumeControl.SetVolume(volume); })
+                .AddTo(this);
         }
     }
 }

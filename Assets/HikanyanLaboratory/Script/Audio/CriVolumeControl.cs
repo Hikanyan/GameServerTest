@@ -42,24 +42,6 @@ namespace HikanyanLaboratory.Audio
             Volume.Subscribe(SetVolume).AddTo(this);
         }
 
-        public void Initialize(string label, float initialValue)
-        {
-            _label = label;
-            _currentValue = initialValue;
-
-            _volumeText.text = label;
-
-            _volumeSlider.minValue = 0;
-            _volumeSlider.maxValue = 100;
-            _volumeSlider.value = initialValue * 100;
-            _volumeSlider.onValueChanged.AddListener(OnSliderChanged);
-
-            _volumeInputField.text = (initialValue * 100).ToString(CultureInfo.CurrentCulture);
-            _volumeInputField.onEndEdit.AddListener(OnInputChanged);
-
-            Volume.Subscribe(SetVolume).AddTo(this);
-        }
-
         public void SetVolume(float volume)
         {
             _currentValue = volume;
