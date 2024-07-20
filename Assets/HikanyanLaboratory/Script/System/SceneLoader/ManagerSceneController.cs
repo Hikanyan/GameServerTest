@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
-using VContainer;
 
 namespace HikanyanLaboratory.System
 {
@@ -14,7 +13,6 @@ namespace HikanyanLaboratory.System
         /// 最初にManagerSceneを読み込む
         /// </summary>
         /// <param name="sceneLoader"></param>
-        [Inject]
         public ManagerSceneController(SceneLoader sceneLoader)
         {
             _sceneLoader = sceneLoader;
