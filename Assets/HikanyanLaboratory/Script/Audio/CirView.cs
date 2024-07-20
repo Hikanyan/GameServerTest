@@ -44,17 +44,11 @@ namespace HikanyanLaboratory.Audio
         {
             _criAudioManager = CriAudioManager.Instance;
 
-            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume,
-                OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
-            _bgmVolumeControl = CreateVolumeControl("BGM Volume", _bgmVolume, OnBgmVolumeSliderChanged,
-                OnBgmVolumeInputChanged);
-            _seVolumeControl =
-                CreateVolumeControl("SE Volume", _seVolume, OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
-            _meVolumeControl =
-                CreateVolumeControl("ME Volume", _meVolume, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
-            _voiceVolumeControl =
-                CreateVolumeControl("Voice Volume", _voiceVolume, OnVoiceVolumeSliderChanged,
-                    OnVoiceVolumeInputChanged);
+            _masterVolumeControl = CreateVolumeControl("Master Volume", _criAudioManager.MasterVolume, _criAudioManager, OnMasterVolumeSliderChanged, OnMasterVolumeInputChanged);
+            _bgmVolumeControl = CreateVolumeControl("BGM Volume", _bgmVolume, _criAudioManager, OnBgmVolumeSliderChanged, OnBgmVolumeInputChanged);
+            _seVolumeControl = CreateVolumeControl("SE Volume", _seVolume, _criAudioManager, OnSeVolumeSliderChanged, OnSeVolumeInputChanged);
+            _meVolumeControl = CreateVolumeControl("ME Volume", _meVolume, _criAudioManager, OnMeVolumeSliderChanged, OnMeVolumeInputChanged);
+            _voiceVolumeControl = CreateVolumeControl("Voice Volume", _voiceVolume, _criAudioManager, OnVoiceVolumeSliderChanged, OnVoiceVolumeInputChanged);
 
             _bgmCueNameControl = CreateCueNameControl("BGM Cue Name");
             _seCueNameControl = CreateCueNameControl("SE Cue Name");
@@ -64,8 +58,7 @@ namespace HikanyanLaboratory.Audio
             _bgmButton.Initialize(_bgmCueNameControl.GetCueName(), CriAudioType.CueSheet_BGM, _bgmCueNameControl);
             _seButton.Initialize(_seCueNameControl.GetCueName(), CriAudioType.CueSheet_SE, _seCueNameControl);
             _meButton.Initialize(_meCueNameControl.GetCueName(), CriAudioType.CueSheet_ME, _meCueNameControl);
-            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice,
-                _voiceCueNameControl);
+            _voiceButton.Initialize(_voiceCueNameControl.GetCueName(), CriAudioType.CueSheet_Voice, _voiceCueNameControl);
         }
 
         private CueNameControl CreateCueNameControl(string label)
@@ -76,8 +69,7 @@ namespace HikanyanLaboratory.Audio
             return cueNameControl;
         }
 
-        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged,
-            UnityAction<string> onInputChanged)
+        private VolumeControl CreateVolumeControl(string label, float initialValue, UnityAction<float> onSliderChanged, UnityAction<string> onInputChanged)
         {
             var volumeControlObject = Instantiate(_volumeControlPrefab, _volumeControlsParent);
             var volumeControl = volumeControlObject.GetComponent<VolumeControl>();

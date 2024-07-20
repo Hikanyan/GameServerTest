@@ -90,7 +90,13 @@ namespace HikanyanLaboratory.Audio
                 _masterVolume = value;
             }
         }
-
+        public void SetVolume(float volume)
+        {
+            foreach (var player in _audioPlayers.Values)
+            {
+                player.SetVolume(volume);
+            }
+        }
         public Guid Play(CriAudioType type, string cueName)
         {
             return Play(type, cueName, 1f, false);
