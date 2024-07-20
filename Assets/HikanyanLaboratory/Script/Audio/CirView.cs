@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -40,12 +39,6 @@ namespace HikanyanLaboratory.Audio
         private float _seVolume = 1f;
         private float _meVolume = 1f;
         private float _voiceVolume = 1f;
-
-        [Inject]
-        public void Construct(CriAudioManager criAudioManager)
-        {
-            _criAudioManager = criAudioManager;
-        }
 
         private void Start()
         {

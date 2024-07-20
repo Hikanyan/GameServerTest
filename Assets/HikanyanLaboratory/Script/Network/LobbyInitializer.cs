@@ -1,9 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
-using VContainer.Unity;
 
 namespace HikanyanLaboratory.Network
 {
-    public class LobbyInitializer : IStartable
+    public class LobbyInitializer
     {
         // ロビーの初期化処理
         // Playerを生成する

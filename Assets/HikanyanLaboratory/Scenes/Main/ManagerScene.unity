@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -168,6 +168,8 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  scopeName: 
+  <Parent>k__BackingField: {fileID: 0}
   _isDebugMode: 0
 --- !u!4 &339823901
 Transform:
@@ -272,12 +274,12 @@ PrefabInstance:
     - target: {fileID: 2726260632512129957, guid: 3b13cf714d30f4449a65c7d9a7d1690d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.34583333
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2726260632512129957, guid: 3b13cf714d30f4449a65c7d9a7d1690d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3462963
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3588202133877296002, guid: 3b13cf714d30f4449a65c7d9a7d1690d,
         type: 3}
@@ -377,7 +379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1228398076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,6 +396,8 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  scopeName: 
+  <Parent>k__BackingField: {fileID: 0}
 --- !u!4 &1228398077
 Transform:
   m_ObjectHideFlags: 0

@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UnityEditor;
-using VContainer;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
@@ -20,12 +19,6 @@ namespace HikanyanLaboratory.Script.TitleScene
         [SerializeField] private Button _exitButton;
 
         private TitlePresenter _presenter;
-
-        [Inject]
-        public void Construct(TitlePresenter presenter)
-        {
-            _presenter = presenter;
-        }
 
         private void Awake()
         {

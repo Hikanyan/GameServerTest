@@ -3,11 +3,10 @@ using Cysharp.Threading.Tasks;
 using HikanyanLaboratory.DebugMode;
 using PlayFab;
 using PlayFab.ClientModels;
-using VContainer.Unity;
 
 namespace HikanyanLaboratory.Script.TitleScene
 {
-    public class TitleController : IStartable
+    public class TitleController
     {
         private bool _isAuthenticated = false;
 

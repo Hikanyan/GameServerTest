@@ -4,7 +4,6 @@ using PlayFab;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer;
 
 namespace HikanyanLaboratory.Network
 {

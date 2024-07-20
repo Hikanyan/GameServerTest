@@ -4,7 +4,6 @@ using CriWare;
 using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using VContainer;
 
 namespace HikanyanLaboratory.Audio
 {
@@ -22,12 +21,6 @@ namespace HikanyanLaboratory.Audio
 
         private CriAtomListener _listener; // リスナー
         protected override bool UseDontDestroyOnLoad => true;
-
-        [Inject]
-        private void Construct(CriAudioSetting audioSetting)
-        {
-            _audioSetting = audioSetting;
-        }
 
         private void Awake()
         {
@@ -133,7 +126,8 @@ namespace HikanyanLaboratory.Audio
             Play3D(transform, type, cueName, 1f, isLoop);
         }
 
-        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
+        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f,
+            bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
@@ -181,7 +175,7 @@ namespace HikanyanLaboratory.Audio
                 Debug.LogWarning($"Audio type {type} not supported.");
             }
         }
-        
+
         public void StopAll()
         {
             foreach (var player in _audioPlayers.Values)
@@ -189,7 +183,7 @@ namespace HikanyanLaboratory.Audio
                 player.StopAll();
             }
         }
-        
+
         public void PauseAll()
         {
             foreach (var player in _audioPlayers.Values)
@@ -197,6 +191,7 @@ namespace HikanyanLaboratory.Audio
                 player.PauseAll();
             }
         }
+
         public void ResumeAll()
         {
             foreach (var player in _audioPlayers.Values)
@@ -204,6 +199,7 @@ namespace HikanyanLaboratory.Audio
                 player.ResumeAll();
             }
         }
+
         public List<ICriAudioPlayerService> GetPlayers(CriAudioType type)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
