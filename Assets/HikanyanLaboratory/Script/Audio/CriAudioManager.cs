@@ -4,19 +4,17 @@ using CriWare;
 using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UniRx;
 
 namespace HikanyanLaboratory.Audio
 {
-    /// <summary>
-    /// Audioの再生を管理するクラス
-    /// </summary>
     public class CriAudioManager : AbstractSingletonMonoBehaviour<CriAudioManager>
     {
         [SerializeField] private CriAudioSetting _audioSetting;
         private float _masterVolume = 1F; // マスターボリューム
         private const float Diff = 0.01F; // 音量の変更があったかどうかの判定に使う
 
-        private Action<float> _masterVolumeChanged; // マスターボリューム変更時のイベント
+        private readonly ISubject<float> _masterVolumeChanged = new Subject<float>(); // マスターボリューム変更時のイベント
         private Dictionary<CriAudioType, ICriAudioPlayerService> _audioPlayers; // 各音声の再生を管理するクラス
 
         private CriAtomListener _listener; // リスナー
@@ -66,13 +64,13 @@ namespace HikanyanLaboratory.Audio
                 // 他のCriAudioTypeも同様に追加可能
             }
 
-            _masterVolumeChanged += volume =>
+            _masterVolumeChanged.Subscribe(volume =>
             {
-                foreach (var player in _audioPlayers)
+                foreach (var player in _audioPlayers.Values)
                 {
-                    player.Value.SetVolume(volume);
+                    player.SetVolume(volume);
                 }
-            };
+            }).AddTo(this);
 
             SceneManager.sceneUnloaded += Unload;
         }
@@ -87,64 +85,65 @@ namespace HikanyanLaboratory.Audio
             get => _masterVolume;
             set
             {
-                if (!(_masterVolume + Diff < value) && !(_masterVolume - Diff > value)) return;
-                _masterVolumeChanged?.Invoke(value);
+                if (Math.Abs(_masterVolume - value) < Diff) return;
+                _masterVolumeChanged.OnNext(value);
                 _masterVolume = value;
             }
         }
 
-        public void Play(CriAudioType type, string cueName)
+        public Guid Play(CriAudioType type, string cueName)
         {
-            Play(type, cueName, 1f, false);
+            return Play(type, cueName, 1f, false);
         }
 
-        public void Play(CriAudioType type, string cueName, bool isLoop = false)
+        public Guid Play(CriAudioType type, string cueName, bool isLoop)
         {
-            Play(type, cueName, 1f, isLoop);
+            return Play(type, cueName, 1f, isLoop);
         }
 
-        public void Play(CriAudioType type, string cueName, float volume = 1f, bool isLoop = false)
+        public Guid Play(CriAudioType type, string cueName, float volume, bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
                 Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
-                player.Play(cueName, volume, isLoop);
+                return player.Play(cueName, volume, isLoop);
             }
             else
             {
                 Debug.LogWarning($"Audio type {type} not supported.");
+                return Guid.Empty;
             }
         }
 
-        public void Play3D(Transform transform, CriAudioType type, string cueName)
+        public Guid Play3D(Transform transform, CriAudioType type, string cueName)
         {
-            Play3D(transform, type, cueName, 1f, false);
+            return Play3D(transform, type, cueName, 1f, false);
         }
 
-        public void Play3D(Transform transform, CriAudioType type, string cueName, bool isLoop)
+        public Guid Play3D(Transform transform, CriAudioType type, string cueName, bool isLoop)
         {
-            Play3D(transform, type, cueName, 1f, isLoop);
+            return Play3D(transform, type, cueName, 1f, isLoop);
         }
 
-        public void Play3D(Transform transform, CriAudioType type, string cueName, float volume = 1f,
-            bool isLoop = false)
+        public Guid Play3D(Transform transform, CriAudioType type, string cueName, float volume, bool isLoop = false)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
                 Debug.Log($"CriAudioType: {type}, CueName: {cueName}");
-                player.Play3D(transform, cueName, volume, isLoop);
+                return player.Play3D(transform, cueName, volume, isLoop);
             }
             else
             {
                 Debug.LogWarning($"3D audio type {type} not supported.");
+                return Guid.Empty;
             }
         }
 
-        public void Pause(CriAudioType type, string cueName)
+        public void Stop(CriAudioType type, Guid id)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Pause(cueName);
+                player.Stop(id);
             }
             else
             {
@@ -152,11 +151,11 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-        public void Resume(CriAudioType type, string cueName)
+        public void Pause(CriAudioType type, Guid id)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Resume(cueName);
+                player.Pause(id);
             }
             else
             {
@@ -164,11 +163,11 @@ namespace HikanyanLaboratory.Audio
             }
         }
 
-        public void Stop(CriAudioType type, string cueName)
+        public void Resume(CriAudioType type, Guid id)
         {
             if (_audioPlayers.TryGetValue(type, out var player))
             {
-                player.Stop(cueName);
+                player.Resume(id);
             }
             else
             {
