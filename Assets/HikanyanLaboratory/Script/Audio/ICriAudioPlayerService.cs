@@ -1,17 +1,15 @@
 ﻿using System;
-using CriWare;
 using UnityEngine;
 
 namespace HikanyanLaboratory.Audio
 {
-    public interface ICriAudioPlayerService : IDisposable
+    public interface ICriAudioPlayerService : ICriVolume, IDisposable
     {
-        void Play(string cueName, float volume = 1f, bool isLoop = false);
-        void Play3D(Transform transform, string cueName, float volume = 1f, bool isLoop = false);
-        void Stop(string cueName);
-        void Pause(string cueName);
-        void Resume(string cueName);
-        void SetVolume(float volume);
+        Guid Play(string cueName, float volume = 1f, bool isLoop = false);
+        Guid Play3D(Transform transform, string cueName, float volume = 1f, bool isLoop = false);
+        void Stop(Guid id);
+        void Pause(Guid id);
+        void Resume(Guid id);
         void StopAll();
         void PauseAll();
         void ResumeAll();

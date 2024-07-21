@@ -1454,7 +1454,7 @@ GameObject:
   - component: {fileID: 788483561}
   - component: {fileID: 788483562}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: CriAudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

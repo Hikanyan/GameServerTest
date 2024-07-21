@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer;
 
 namespace HikanyanLaboratory.System
 {
@@ -21,11 +20,6 @@ namespace HikanyanLaboratory.System
 
         private static readonly int MaskTex = Shader.PropertyToID("_MaskTex");
 
-        [Inject]
-        public void Construct(IFadeStrategy fadeStrategy)
-        {
-            _fadeStrategy = fadeStrategy;
-        }
 
         private void Start()
         {
