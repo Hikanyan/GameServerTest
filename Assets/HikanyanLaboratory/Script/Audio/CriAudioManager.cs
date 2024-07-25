@@ -5,6 +5,7 @@ using HikanyanLaboratory.System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UniRx;
+using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace HikanyanLaboratory.Audio
 {

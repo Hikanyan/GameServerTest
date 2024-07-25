@@ -5,7 +5,7 @@ namespace HikanyanLaboratory.Script.TitleScene
 {
     public class TitlePresenter 
     {
-        private readonly ManagerSceneController _sceneController;
+        private readonly SceneManager _sceneController;
         private readonly TitleController _titleController;
 
         public void Start()
@@ -15,7 +15,7 @@ namespace HikanyanLaboratory.Script.TitleScene
 
         public void OnStartButtonPressed()
         {
-            _ = _sceneController.ChangeScene("LobbyScene");
+            SceneManager.Instance.
         }
     }
 }

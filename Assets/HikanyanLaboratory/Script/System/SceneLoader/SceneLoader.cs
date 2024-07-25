@@ -15,7 +15,7 @@ namespace HikanyanLaboratory.System
             // シーンが読み込まれていない場合は読み込む
             if (!IsSceneLoaded(sceneName))
             {
-                var loadSceneOperation = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
+                var loadSceneOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
                 while (!loadSceneOperation.isDone)
                 {
                     await UniTask.Yield();
@@ -31,7 +31,7 @@ namespace HikanyanLaboratory.System
         {
             if (IsSceneLoaded(sceneName))
             {
-                var unloadSceneOperation = SceneManager.UnloadSceneAsync(sceneName);
+                var unloadSceneOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
                 while (unloadSceneOperation is { isDone: false })
                 {
                     await UniTask.Yield();
@@ -46,9 +46,9 @@ namespace HikanyanLaboratory.System
         /// <returns></returns>
         public bool IsSceneLoaded(string sceneName)
         {
-            for (int i = 0; i < SceneManager.sceneCount; i++)
+            for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++)
             {
-                Scene scene = SceneManager.GetSceneAt(i);
+                Scene scene = UnityEngine.SceneManagement.SceneManager.GetSceneAt(i);
                 if (scene.name == sceneName)
                 {
                     return true;

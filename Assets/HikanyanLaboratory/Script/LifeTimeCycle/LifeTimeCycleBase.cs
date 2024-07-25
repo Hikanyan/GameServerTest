@@ -2,7 +2,7 @@
 
 namespace HikanyanLaboratory.LifeTimeCycle
 {
-    public class LifeTimeCycle : MonoBehaviour
+    public class LifeTimeCycleBase : MonoBehaviour
     {
         
     }
