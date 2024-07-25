@@ -1,4 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HikanyanLaboratory.System
@@ -8,88 +11,57 @@ namespace HikanyanLaboratory.System
         private Scene _lastScene;
         private readonly SceneLoader _sceneLoader;
         private readonly Scene _neverUnloadScene;
+        private readonly IFadeStrategy _fadeStrategy;
+        private Stack<string> _sceneHistory = new Stack<string>();
 
-        /// <summary>
-        /// 最初にManagerSceneを読み込む
-        /// </summary>
-        /// <param name="sceneLoader"></param>
-        public ManagerSceneController(SceneLoader sceneLoader)
+        public ManagerSceneController(SceneLoader sceneLoader, Scene neverUnloadScene, IFadeStrategy fadeStrategy)
         {
             _sceneLoader = sceneLoader;
-            // 現在のSceneを取得
-            _neverUnloadScene = SceneManager.GetActiveScene();
-            _lastScene = _neverUnloadScene;
-            LoadManagerScene().Forget();
+            _neverUnloadScene = neverUnloadScene;
+            _fadeStrategy = fadeStrategy;
         }
 
-        /// <summary>
-        /// 現在のシーンをUnloadしてから新しいシーンをLoadする
-        /// </summary>
-        /// <param name="sceneName"> 新しいシーンの名前 </param>
-        public async UniTask ChangeScene(string sceneName)
+        public async UniTask LoadSceneWithFade(string sceneName, Material fadeMaterial, float fadeDuration,
+            float cutoutRange, Ease ease, bool recordHistory = true)
         {
-            await CurrentSceneUnload();
-            await _sceneLoader.LoadSceneAsync(sceneName);
-
-            // シーンのロード完了を待つ
-            Scene loadedScene = SceneManager.GetSceneByName(sceneName);
-            while (!loadedScene.isLoaded)
+            await _fadeStrategy.FadeOut(fadeMaterial, fadeDuration, cutoutRange, ease);
+            await _sceneLoader.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            if (recordHistory && !_sceneLoader.IsSceneLoaded(sceneName))
             {
-                await UniTask.Yield();
+                _sceneHistory.Push(sceneName);
             }
 
-            SceneManager.SetActiveScene(loadedScene);
-            _lastScene = loadedScene;
+            await _fadeStrategy.FadeIn(fadeMaterial, fadeDuration, cutoutRange, ease);
         }
 
-        /// <summary>
-        /// TitleSceneを読み込む
-        /// </summary>
-        public async UniTaskVoid LoadTitleScene()
+        public async UniTask UnloadSceneWithFade(string sceneName, Material fadeMaterial, float fadeDuration,
+            float cutoutRange, Ease ease)
         {
-            await ChangeScene("TitleScene");
+            await _fadeStrategy.FadeOut(fadeMaterial, fadeDuration, cutoutRange, ease);
+            await _sceneLoader.UnloadSceneAsync(sceneName);
+            await _fadeStrategy.FadeIn(fadeMaterial, fadeDuration, cutoutRange, ease);
         }
 
-        /// <summary>
-        /// GameSceneを読み込む
-        /// </summary>
-        public async UniTaskVoid LoadGameScene()
+        public async UniTask ReloadSceneWithFade(Material fadeMaterial, float fadeDuration, float cutoutRange,
+            Ease ease)
         {
-            await ChangeScene("InGameScene");
-        }
-
-        /// <summary>
-        /// ResultSceneを読み込む
-        /// </summary>
-        public async UniTaskVoid LoadResultScene()
-        {
-            await ChangeScene("ResultScene");
-        }
-
-        /// <summary>
-        /// LobbySceneを読み込む
-        /// </summary>
-        public async UniTaskVoid LoadLobbyScene()
-        {
-            await ChangeScene("LobbyScene");
-        }
-
-        /// <summary>
-        /// UnloadしないでManagerSceneを読み込む
-        /// </summary>
-        private async UniTaskVoid LoadManagerScene()
-        {
-            await _sceneLoader.LoadSceneAsync(_neverUnloadScene.name, LoadSceneMode.Additive);
-        }
-
-        /// <summary>
-        /// 現在のシーンをUnloadする
-        /// </summary>
-        private async UniTask CurrentSceneUnload()
-        {
-            if (_lastScene != _neverUnloadScene)
+            if (_sceneHistory.Count > 0)
             {
-                await _sceneLoader.UnloadSceneAsync(_lastScene.name);
+                string currentScene = _sceneHistory.Pop();
+                await UnloadSceneWithFade(currentScene, fadeMaterial, fadeDuration, cutoutRange, ease);
+                await LoadSceneWithFade(currentScene, fadeMaterial, fadeDuration, cutoutRange, ease, false);
+            }
+        }
+
+        public async UniTask LoadPreviousSceneWithFade(Material fadeMaterial, float fadeDuration, float cutoutRange,
+            Ease ease)
+        {
+            if (_sceneHistory.Count > 1)
+            {
+                string currentScene = _sceneHistory.Pop();
+                string previousScene = _sceneHistory.Peek();
+                await UnloadSceneWithFade(currentScene, fadeMaterial, fadeDuration, cutoutRange, ease);
+                await LoadSceneWithFade(previousScene, fadeMaterial, fadeDuration, cutoutRange, ease, false);
             }
         }
     }

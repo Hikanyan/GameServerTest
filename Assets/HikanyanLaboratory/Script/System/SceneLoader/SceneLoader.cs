@@ -44,7 +44,7 @@ namespace HikanyanLaboratory.System
         /// </summary>
         /// <param name="sceneName"></param>
         /// <returns></returns>
-        private bool IsSceneLoaded(string sceneName)
+        public bool IsSceneLoaded(string sceneName)
         {
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
