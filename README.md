@@ -99,3 +99,35 @@ classDiagram
     PlayFabController --> PlayFabAuthService
 
 ```
+
+```mermaid
+classDiagram
+    class SceneLoader {
+        +UniTask LoadSceneAsync(string sceneName, LoadSceneMode loadSceneMode)
+        +UniTask UnloadSceneAsync(string sceneName)
+        +bool IsSceneLoaded(string sceneName)
+    }
+
+    class IFadeStrategy {
+        <<interface>>
+        +UniTask FadeOut(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+        +UniTask FadeIn(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+    }
+
+    class BasicFadeStrategy {
+        +UniTask FadeOut(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+        +UniTask FadeIn(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+    }
+
+    class ManagerSceneController {
+        +UniTask LoadSceneWithFade(string sceneName, Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease, bool recordHistory)
+        +UniTask UnloadSceneWithFade(string sceneName, Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+        +UniTask ReloadSceneWithFade(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+        +UniTask LoadPreviousSceneWithFade(Material fadeMaterial, float fadeDuration, float cutoutRange, Ease ease)
+    }
+
+    SceneLoader --|> ManagerSceneController : uses
+    IFadeStrategy <|.. BasicFadeStrategy
+    IFadeStrategy --|> ManagerSceneController : uses
+
+```
